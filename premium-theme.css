@@ -16,7 +16,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
+    background:
         radial-gradient(ellipse 80% 60% at 10% 0%, rgba(5, 150, 105, 0.06) 0%, transparent 60%),
         radial-gradient(ellipse 60% 40% at 90% 100%, rgba(212, 160, 23, 0.04) 0%, transparent 50%);
     pointer-events: none;
@@ -24,7 +24,7 @@ body::before {
 }
 
 [data-theme="dark"] body::before {
-    background: 
+    background:
         radial-gradient(ellipse 80% 60% at 10% 0%, rgba(5, 150, 105, 0.04) 0%, transparent 60%),
         radial-gradient(ellipse 60% 40% at 90% 100%, rgba(212, 160, 23, 0.03) 0%, transparent 50%);
 }
@@ -32,13 +32,15 @@ body::before {
 /* ::::: PREMIUM NAVIGATION ::::: */
 .top-nav {
     background: var(--bg-nav-gradient);
-    padding: 0.65rem 1.5rem;
-    box-shadow: 0 4px 30px rgba(4, 47, 46, 0.25), 0 1px 0 rgba(255,255,255,0.05) inset;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0.4rem 1.5rem;
+    box-shadow: 0 4px 30px rgba(4, 47, 46, 0.25), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .nav-brand img {
-    height: 42px;
+    height: 70px;
+    max-width: 200px;
+    object-fit: contain;
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
     transition: var(--transition-smooth);
 }
@@ -64,7 +66,7 @@ body::before {
     background: rgba(255, 255, 255, 0.95);
     color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255,255,255,0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .nav-btn.active {
@@ -91,7 +93,7 @@ body::before {
     left: -30%;
     width: 160%;
     height: 200%;
-    background: 
+    background:
         radial-gradient(ellipse 40% 30% at 20% 30%, rgba(212, 160, 23, 0.1) 0%, transparent 60%),
         radial-gradient(ellipse 30% 40% at 80% 60%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
     animation: heroFloat 12s ease-in-out infinite;
@@ -110,9 +112,19 @@ body::before {
 }
 
 @keyframes heroFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(3%, -2%) scale(1.02); }
-    66% { transform: translate(-2%, 1%) scale(0.98); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(3%, -2%) scale(1.02);
+    }
+
+    66% {
+        transform: translate(-2%, 1%) scale(0.98);
+    }
 }
 
 .logo-main {
@@ -485,8 +497,15 @@ body::before {
 }
 
 @keyframes premiumModalPop {
-    from { opacity: 0; transform: scale(0.92) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 .modal h3 {
@@ -670,23 +689,49 @@ body::before {
 
 /* ::::: PREMIUM ANIMATIONS ::::: */
 @keyframes premiumShimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 @keyframes premiumFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
 }
 
 @keyframes premiumPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 @keyframes premiumGlow {
-    0%, 100% { box-shadow: 0 0 20px rgba(5, 150, 105, 0.15); }
-    50% { box-shadow: 0 0 40px rgba(5, 150, 105, 0.25); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(5, 150, 105, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(5, 150, 105, 0.25);
+    }
 }
 
 /* ::::: PREMIUM WHATSAPP BUTTON ::::: */
@@ -1006,12 +1051,13 @@ a[href*="wa.me"]:hover {
 }
 
 .footer-brand .footer-logo {
-    width: 56px;
-    height: 56px;
+    width: auto;
+    max-width: 200px;
+    height: 60px;
     border-radius: 14px;
     object-fit: contain;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 6px;
+    background: transparent;
+    padding: 0;
     margin-bottom: 16px;
 }
 
@@ -1091,9 +1137,11 @@ a[href*="wa.me"]:hover {
         gap: 32px;
         text-align: center;
     }
+
     .footer-brand p {
         max-width: none;
     }
+
     .footer-content {
         padding: 48px 24px 24px;
     }
@@ -1167,6 +1215,7 @@ a[href*="wa.me"]:hover {
         opacity: 0;
         transform: translateX(100%) scale(0.9);
     }
+
     100% {
         opacity: 1;
         transform: translateX(0) scale(1);
@@ -1178,6 +1227,7 @@ a[href*="wa.me"]:hover {
         opacity: 1;
         transform: translateX(0) scale(1);
     }
+
     100% {
         opacity: 0;
         transform: translateX(100%) scale(0.85);
@@ -1207,9 +1257,19 @@ a[href*="wa.me"]:hover {
 }
 
 @keyframes pnIconPop {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* Type-specific icon styling */
@@ -1221,8 +1281,15 @@ a[href*="wa.me"]:hover {
 }
 
 @keyframes pnSuccessRing {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.3); }
-    50% { box-shadow: 0 0 0 6px rgba(5, 150, 105, 0); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(5, 150, 105, 0);
+    }
 }
 
 .pn-error .pn-icon {
@@ -1233,8 +1300,15 @@ a[href*="wa.me"]:hover {
 }
 
 @keyframes pnErrorRing {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); }
-    50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+    }
 }
 
 .pn-warning .pn-icon {
@@ -1248,10 +1322,21 @@ a[href*="wa.me"]:hover {
 }
 
 /* Left accent border per type */
-.pn-success { border-left: 3px solid #059669; }
-.pn-error   { border-left: 3px solid #ef4444; }
-.pn-warning { border-left: 3px solid #f59e0b; }
-.pn-info    { border-left: 3px solid #3b82f6; }
+.pn-success {
+    border-left: 3px solid #059669;
+}
+
+.pn-error {
+    border-left: 3px solid #ef4444;
+}
+
+.pn-warning {
+    border-left: 3px solid #f59e0b;
+}
+
+.pn-info {
+    border-left: 3px solid #3b82f6;
+}
 
 /* Body */
 .pn-body {
@@ -1284,14 +1369,30 @@ a[href*="wa.me"]:hover {
     transform-origin: left;
 }
 
-.pn-success .pn-bar { background: linear-gradient(90deg, #059669, #34d399); }
-.pn-error .pn-bar   { background: linear-gradient(90deg, #ef4444, #f87171); }
-.pn-warning .pn-bar { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-.pn-info .pn-bar    { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.pn-success .pn-bar {
+    background: linear-gradient(90deg, #059669, #34d399);
+}
+
+.pn-error .pn-bar {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.pn-warning .pn-bar {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.pn-info .pn-bar {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
 
 @keyframes pnCountdown {
-    0% { width: 100%; }
-    100% { width: 0%; }
+    0% {
+        width: 100%;
+    }
+
+    100% {
+        width: 0%;
+    }
 }
 
 /* Close button */
@@ -1378,18 +1479,35 @@ a[href*="wa.me"]:hover {
         right: 12px;
         left: 12px;
     }
+
     .pn-toast {
         min-width: 0;
         max-width: none;
         width: 100%;
     }
+
     @keyframes pnSlideIn {
-        0% { opacity: 0; transform: translateY(100%) scale(0.95); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
+        0% {
+            opacity: 0;
+            transform: translateY(100%) scale(0.95);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
+
     @keyframes pnSlideOut {
-        0% { opacity: 1; transform: translateY(0) scale(1); }
-        100% { opacity: 0; transform: translateY(100%) scale(0.9); }
+        0% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(100%) scale(0.9);
+        }
     }
 }
 
@@ -1531,8 +1649,15 @@ a[href*="wa.me"]:hover {
 }
 
 @keyframes csBadgeShine {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.15); }
+
+    0%,
+    100% {
+        filter: brightness(1);
+    }
+
+    50% {
+        filter: brightness(1.15);
+    }
 }
 
 .cs-title {
@@ -1608,20 +1733,56 @@ a[href*="wa.me"]:hover {
     animation: csCardPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-.cs-card:nth-child(1) { animation-delay: 0.05s; }
-.cs-card:nth-child(2) { animation-delay: 0.1s; }
-.cs-card:nth-child(3) { animation-delay: 0.15s; }
-.cs-card:nth-child(4) { animation-delay: 0.2s; }
-.cs-card:nth-child(5) { animation-delay: 0.25s; }
-.cs-card:nth-child(6) { animation-delay: 0.3s; }
-.cs-card:nth-child(7) { animation-delay: 0.35s; }
-.cs-card:nth-child(8) { animation-delay: 0.4s; }
-.cs-card:nth-child(9) { animation-delay: 0.45s; }
-.cs-card:nth-child(10) { animation-delay: 0.5s; }
+.cs-card:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.cs-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.cs-card:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.cs-card:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.cs-card:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.cs-card:nth-child(6) {
+    animation-delay: 0.3s;
+}
+
+.cs-card:nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+.cs-card:nth-child(8) {
+    animation-delay: 0.4s;
+}
+
+.cs-card:nth-child(9) {
+    animation-delay: 0.45s;
+}
+
+.cs-card:nth-child(10) {
+    animation-delay: 0.5s;
+}
 
 @keyframes csCardPop {
-    0% { opacity: 0; transform: translateY(20px) scale(0.9); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .cs-card:hover {
@@ -1844,24 +2005,30 @@ a[href*="wa.me"]:hover {
         max-height: 72vh;
         border-radius: 24px 24px 0 0;
     }
+
     .cs-header {
         padding: 6px 18px 12px;
     }
+
     .cs-title {
         font-size: 1.1rem;
     }
+
     .cs-scroll {
         padding: 0 18px 14px;
         gap: 10px;
     }
+
     .cs-card {
         flex: 0 0 140px;
         padding: 12px 10px;
     }
+
     .cs-card-img {
         width: 60px;
         height: 60px;
     }
+
     .cs-footer {
         padding: 6px 18px 16px;
     }
@@ -1986,6 +2153,7 @@ a[href*="wa.me"]:hover {
         padding: 0 10px;
         font-size: 0.72rem;
     }
+
     #csToggleLabel {
         font-size: 0.72rem;
     }
@@ -1995,6 +2163,7 @@ a[href*="wa.me"]:hover {
     .cs-toggle-btn {
         height: 40px;
     }
+
     .cs-manual-btn {
         font-size: 0.78rem;
         padding: 8px 0;
