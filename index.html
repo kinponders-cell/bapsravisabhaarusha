@@ -806,7 +806,7 @@
     <!-- NAVIGATION -->
     <nav class="top-nav">
         <div class="nav-brand">
-            <img src="https://drive.google.com/thumbnail?id=1RRkyC02DY9ddtFTMrlp3aJ7lTUQiVpP6" alt="Logo">
+            <img src="LogoWith%20Name.png" alt="Logo">
         </div>
         <div class="nav-links">
             <button class="nav-btn active" onclick="showPage('page-home', this)">
@@ -871,7 +871,7 @@
     <div id="page-home" class="page fade-in">
         <header class="header-hero">
             <div class="header-content">
-                <img class="logo-main" src="https://drive.google.com/thumbnail?id=1WP91uPhyxAafwj8-6VWOE-vH5ywnUoZ7"
+                <img class="logo-main" src="Logo_Seasons.png"
                     alt="Logo" />
                 <h1 class="company-title">Seasons Supplies Ltd</h1>
                 <p class="company-subtitle">Over <strong>20 years of experience</strong>, Seasons Supplies Ltd. proudly
@@ -1971,8 +1971,16 @@
         <div class="cart-footer">
 
             <div class="total-row">
-                <span style="font-weight:500; font-size:1rem; color:var(--text-muted);">Total</span>
-                <span style="font-family:monospace;">TZS <span id="cartTotal">0</span></span>
+                <span style="font-weight:500; font-size:1rem; color:var(--text-muted);">Subtotal</span>
+                <span style="font-family:monospace;">TZS <span id="cartSubtotal">0</span></span>
+            </div>
+            <div class="total-row">
+                <span style="font-weight:500; font-size:1rem; color:var(--text-muted);">VAT 15%</span>
+                <span style="font-family:monospace;">TZS <span id="cartVat">0</span></span>
+            </div>
+            <div class="total-row" style="margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;">
+                <span style="font-weight:700; font-size:1.1rem;">Total</span>
+                <span style="font-family:monospace; font-weight:700;">TZS <span id="cartTotal">0</span></span>
             </div>
             <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-size:0.9rem;">
                 <span>Items: <span id="cartBadgeFooter">0</span></span>
@@ -1992,7 +2000,14 @@
             <div style="max-height:300px; overflow-y:auto; margin:1rem 0;">
                 <table id="summaryTable" style="width:100%; text-align:left; border-collapse:collapse;"></table>
             </div>
-            <div style="text-align:right; font-weight:bold; font-size:1.2rem; margin-bottom:1.5rem;">
+            <div style="text-align:right; font-size:1rem; margin-bottom:0.5rem; color:var(--text-muted);">
+                Subtotal: TZS <span id="summarySubtotal"></span>
+            </div>
+            <div style="text-align:right; font-size:1rem; margin-bottom:0.5rem; color:var(--text-muted);">
+                VAT 15%: TZS <span id="summaryVat"></span>
+            </div>
+            <div
+                style="text-align:right; font-weight:bold; font-size:1.2rem; margin-bottom:1.5rem; border-top: 1px solid #eee; padding-top: 0.5rem;">
                 Total: TZS <span id="summaryTotal"></span>
             </div>
             <div class="modal-actions">
@@ -2231,7 +2246,7 @@
         <div class="footer-content">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <img src="https://drive.google.com/thumbnail?id=1WP91uPhyxAafwj8-6VWOE-vH5ywnUoZ7"
+                    <img src="Logo_Seasons.png"
                         alt="Seasons Supplies Ltd" class="footer-logo">
                     <h3>Seasons Supplies Ltd</h3>
                     <p>Over 20 years of trusted excellence — supplying quality products to lodges and hotels across
@@ -2338,7 +2353,7 @@
     </script>
     <script>
         // CONFIG
-        const API_URL = "https://script.google.com/macros/s/AKfycbwuS3fU7hqIU7IMeypo_vEtWKUr9wodzeH1xC6L5B4rireinfj5s-Iw0dAbfPdNZU8A/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbyJVqBKjGDT2AtQs8qnz-ZWXlYvv6dxErVyRo44lnNmdJn6XILvmZyyNtkoPbCLIfM/exec";
         // Update this URL with your newly deployed Google Apps Script URL for Data5555:
         const STATEMENT_API_URL = "";
         const STOCK_API_URL = "";
@@ -3353,7 +3368,11 @@
         </div>`;
                 });
 
-            document.getElementById("cartTotal").innerText = totalAmount.toLocaleString();
+            const vat = totalAmount * 0.15;
+            const finalTotal = totalAmount + vat;
+            document.getElementById("cartSubtotal").innerText = totalAmount.toLocaleString();
+            document.getElementById("cartVat").innerText = vat.toLocaleString();
+            document.getElementById("cartTotal").innerText = finalTotal.toLocaleString();
             const badge = document.getElementById("cartBadge");
             badge.innerText = itemCount;
             document.getElementById("cartBadgeFooter").innerText = itemCount;
@@ -3400,7 +3419,11 @@
                 const line = i.qty * i.price; total += line;
                 t.innerHTML += `<tr><td style="padding:10px 0;">${i.name}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">${line.toLocaleString()}</td></tr>`;
             });
-            document.getElementById("summaryTotal").innerText = total.toLocaleString();
+            const vat = total * 0.15;
+            const finalTotal = total + vat;
+            document.getElementById("summarySubtotal").innerText = total.toLocaleString();
+            document.getElementById("summaryVat").innerText = vat.toLocaleString();
+            document.getElementById("summaryTotal").innerText = finalTotal.toLocaleString();
             document.getElementById("checkoutModal").style.display = 'flex';
         }
 
@@ -3943,11 +3966,13 @@
         function saveLastOrder(cartData, meta) {
             let orders = JSON.parse(localStorage.getItem("lastOrders")) || [];
             const orderTotal = cartData.reduce((sum, i) => sum + (Number(i.qty) * Number(i.price)), 0);
+            const vat = orderTotal * 0.15;
+            const finalTotal = orderTotal + vat;
             orders.unshift({
                 date: new Date().toISOString(),
                 orderNo: meta.orderNo || "N/A",
                 department: meta.department || "N/A",
-                total: orderTotal,
+                total: finalTotal,
                 items: cartData.map(i => ({ barcode: i.barcode, qty: i.qty }))
             });
             orders = orders.slice(0, 5);
