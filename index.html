@@ -831,6 +831,9 @@
             <button class="nav-btn" onclick="showPage('page-guest-calc', this)" id="guestCalcBtn" style="display:none;">
                 🏨 Guest Calc
             </button>
+            <button class="nav-btn" onclick="showPage('page-wholesale', this)" id="wholesaleBtn" style="display:none;">
+                🏪 Wholesale
+            </button>
             <!-- HIDDEN DOWNLOAD PAGE
             <button class="nav-btn" onclick="showPage('page-download', this)">
                 <img src="https://drive.google.com/thumbnail?id=1qp4Goakfs4cN_614-ZGCKi0hjQ7Q9ajC"> List
@@ -871,8 +874,7 @@
     <div id="page-home" class="page fade-in">
         <header class="header-hero">
             <div class="header-content">
-                <img class="logo-main" src="Logo_Seasons.png"
-                    alt="Logo" />
+                <img class="logo-main" src="Logo_Seasons.png" alt="Logo" />
                 <h1 class="company-title">Seasons Supplies Ltd</h1>
                 <p class="company-subtitle">Over <strong>20 years of experience</strong>, Seasons Supplies Ltd. proudly
                     supplies quality products to lodges and hotels across
@@ -1692,6 +1694,10 @@
                 <button class="bp-tab" onclick="analyticsSetPeriod('90', this)">Last 90 Days</button>
                 <button class="bp-tab" onclick="analyticsSetPeriod('all', this)">All Time</button>
             </div>
+            <button class="bp-refresh-btn" style="background:#f59e0b; color:white; border-color:#f59e0b;"
+                onclick="analyticsCheckWholesaleIssues()">
+                ⚠️ Wholesale Errors
+            </button>
             <button class="bp-refresh-btn" id="analyticsRefreshBtn" onclick="analyticsLoadData()">
                 <span class="bp-refresh-icon">🔄</span> Refresh
             </button>
@@ -2240,14 +2246,159 @@
         </div>
     </div>
 
+    <!-- PAGE: WHOLESALE -->
+    <div id="page-wholesale" class="page" style="display:none;">
+        <!-- Wholesale Hero -->
+        <div class="ws-hero">
+            <div class="ws-hero-particles">
+                <div class="ws-particle ws-p1"></div>
+                <div class="ws-particle ws-p2"></div>
+                <div class="ws-particle ws-p3"></div>
+                <div class="ws-particle ws-p4"></div>
+            </div>
+            <div class="ws-hero-badge">🏪 Wholesale Portal</div>
+            <h1 class="ws-hero-title">Wholesale Price List</h1>
+            <p class="ws-hero-subtitle">Exclusive wholesale pricing for authorized partners</p>
+        </div>
+
+        <!-- Wholesale Login Required Panel -->
+        <div id="wsLoginRequired" class="ws-login-required">
+            <div class="ws-lock-icon">🔒</div>
+            <h2>Wholesale Access Required</h2>
+            <p>Login with your authorized wholesale email to view prices and products.</p>
+            <button class="ws-login-btn" onclick="openWholesaleLoginModal()">🔐 Login to Wholesale</button>
+        </div>
+
+        <!-- Wholesale Content (shown after login) -->
+        <div id="wsContent" style="display:none;">
+            <!-- Sticky Search & Controls identical to Order Page -->
+            <div class="filter-scroll-container">
+                <div class="filter-bar">
+                    <!-- Center: Search -->
+                    <div style="position:relative; width: 380px; text-align:center;">
+                        <input id="wsSearch" class="search-input" placeholder="🔍 Search products by name or barcode..."
+                            onkeyup="wsFilterProducts()"
+                            style="width:100%; padding: 0.6rem 2.2rem 0.6rem 0.8rem; font-size:1rem; height:46px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        <button onclick="document.getElementById('wsSearch').value=''; wsFilterProducts();"
+                            style="position:absolute; right:5px; top:50%; transform:translateY(-50%); background:none; border:none; color:#999; cursor:pointer; font-size:1.2rem; padding:5px;">&times;</button>
+                    </div>
+
+                    <!-- Right: Buttons Group -->
+                    <div class="control-row" style="display:flex; gap: 1rem; align-items:center;">
+
+                        <!-- View Toggles -->
+                        <div
+                            style="display:flex; border: 1px solid #e5e7eb; border-radius:12px; overflow:hidden; height:46px;">
+                            <button id="wsGridBtn" class="toggle-btn panel-btn active" onclick="wsSetView('grid')"
+                                style="border:none; border-radius:0; border-right:1px solid #e5e7eb; height:100%;">Grid</button>
+                            <button id="wsListBtn" class="toggle-btn panel-btn" onclick="wsSetView('list')"
+                                style="border:none; border-radius:0; height:100%;">List</button>
+                        </div>
+
+                        <!-- Drafts -->
+                        <div style="position:relative;">
+                            <button class="nav-btn panel-btn" onclick="toggleWsDraftMenu()"
+                                style="color:var(--text-main); height:46px; border:1px solid #e5e7eb; background:white;">
+                                Drafts ▾
+                            </button>
+                            <div id="wsDraftMenu"
+                                style="display:none; position:absolute; right:0; top:50px; background:white; padding:0.5rem; border-radius:12px; box-shadow:var(--shadow-lg); width:180px; z-index:50; border:1px solid #e5e7eb;">
+                                <button class="nav-btn" onclick="saveDraftToLocal();closeWsDraftMenu();"
+                                    style="width:100%; color:var(--text-main); background:transparent; justify-content:flex-start;">💾
+                                    Save</button>
+                                <button class="nav-btn" onclick="loadDraftFromLocal();closeWsDraftMenu();"
+                                    style="width:100%; color:var(--text-main); background:transparent; justify-content:flex-start;">📂
+                                    Resume</button>
+                                <button class="nav-btn" onclick="downloadDraftExcel();closeWsDraftMenu();"
+                                    style="width:100%; color:var(--text-main); background:transparent; justify-content:flex-start;">⬇️
+                                    CSV</button>
+                                <button class="nav-btn" onclick="openDraftUpload();closeWsDraftMenu();"
+                                    style="width:100%; color:var(--text-main); background:transparent; justify-content:flex-start;">📤
+                                    Upload</button>
+                            </div>
+                        </div>
+
+                        <!-- Stats & Logout -->
+                        <div style="display:flex; align-items:center; gap:0.5rem; height:46px;">
+                            <div class="ws-stat-chip"
+                                style="margin:0; height:100%; display:flex; align-items:center; background: rgba(30,41,59,0.8); color: white;">
+                                <span class="ws-stat-icon">📦</span><span id="wsProductCount">0</span>
+                            </div>
+                            <button class="ws-logout-btn" onclick="wholesaleLogout()"
+                                style="height:100%; margin:0; padding: 0 1rem;">🔓 Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div id="wsLoading" style="display:none; text-align:center; padding: 4rem 2rem;">
+                <div class="ws-loader-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <p style="color:#6b7280; margin-top:1.5rem; font-size:1rem;">Loading wholesale products...</p>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="cards-grid" id="wsProductsGrid">
+                <!-- Cards rendered by JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="wsEmpty" style="display:none; text-align:center; padding: 4rem 2rem;">
+                <div style="font-size:3rem; margin-bottom:1rem; opacity:0.3;">📭</div>
+                <p style="color:#9ca3af; font-size:1rem;">No products found matching your search.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHOLESALE LOGIN MODAL -->
+    <div id="wsLoginModal" class="modal">
+        <div class="modal-content ws-modal-content" style="text-align:center; max-width: 380px;">
+            <div class="ws-modal-header">
+                <div class="ws-modal-icon">🏪</div>
+                <h3>Wholesale Login</h3>
+                <p style="color:#6b7280; font-size:0.9rem; margin: 0;">Enter your authorized wholesale email to access
+                    pricing.</p>
+            </div>
+
+            <!-- Step 1: Email -->
+            <div id="wsLoginStep1">
+                <div class="form-group" style="margin-top:1.5rem;">
+                    <input id="wsLoginEmail" type="email" class="form-input ws-form-input"
+                        placeholder="your-email@company.com" style="width:100%; text-align:center;">
+                </div>
+                <div class="modal-actions" style="justify-content:center; margin-top:20px;">
+                    <button class="btn-secondary" onclick="closeWholesaleLoginModal()">Cancel</button>
+                    <button class="ws-action-btn" onclick="requestWholesaleCode()" id="wsOtpBtn">Get Code</button>
+                </div>
+            </div>
+
+            <!-- Step 2: OTP -->
+            <div id="wsLoginStep2" style="display:none;">
+                <p style="font-size:0.85rem; color:#059669; margin:1rem 0;">✅ Code sent! Check your inbox.</p>
+                <div class="form-group">
+                    <input id="wsLoginOtp" type="number" class="form-input ws-form-input" placeholder="123456"
+                        style="width:100%; text-align:center; letter-spacing:5px; font-size:1.3rem;">
+                </div>
+                <div class="modal-actions" style="justify-content:center; margin-top:20px;">
+                    <button class="btn-secondary" onclick="wsBackToEmail()">Back</button>
+                    <button class="ws-action-btn" onclick="completeWholesaleLogin()" id="wsVerifyBtn">Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- PREMIUM FOOTER -->
     <footer class="premium-footer" id="premiumFooter">
         <div class="footer-glow"></div>
         <div class="footer-content">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <img src="Logo_Seasons.png"
-                        alt="Seasons Supplies Ltd" class="footer-logo">
+                    <img src="Logo_Seasons.png" alt="Seasons Supplies Ltd" class="footer-logo">
                     <h3>Seasons Supplies Ltd</h3>
                     <p>Over 20 years of trusted excellence — supplying quality products to lodges and hotels across
                         Zanzibar &amp; surrounding regions.</p>
@@ -2353,7 +2504,7 @@
     </script>
     <script>
         // CONFIG
-        const API_URL = "https://script.google.com/macros/s/AKfycbyJVqBKjGDT2AtQs8qnz-ZWXlYvv6dxErVyRo44lnNmdJn6XILvmZyyNtkoPbCLIfM/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbx3AsRzKSD_Ze_mPXM4doIFki7-EM0eRvCUuycRNjW7yYjX1AhS3D_JeQFVMhv53RhY/exec";
         // Update this URL with your newly deployed Google Apps Script URL for Data5555:
         const STATEMENT_API_URL = "";
         const STOCK_API_URL = "";
@@ -2468,34 +2619,12 @@
                 });
             },
             getStockFulfillment: (token) => {
-                // Fetch orders from main database (using existing getAllBuyingPatterns logic)
-                const pOrders = fetch(API_URL, {
+                return fetch(API_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'getAllBuyingPatterns', data: { token } })
+                    body: JSON.stringify({ action: 'getStockFulfillmentReport', data: { token } })
                 }).then(r => r.json()).then(d => {
                     if (d.result) return d.result;
-                    throw new Error(d.error || 'Failed to load order history');
-                });
-
-                // Fetch stock from new external stock sheet
-                const pStock = fetch(STOCK_API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'getStock', data: {} })
-                }).then(r => r.json()).then(d => {
-                    if (d.result) return d.result;
-                    // If the script returns directly the array
-                    if (Array.isArray(d)) return d;
-                    throw new Error(d.error || 'Failed to load stock data');
-                });
-
-                return Promise.all([pOrders, pStock]).then(results => {
-                    const orderData = results[0];
-                    const stockData = results[1];
-                    return {
-                        orders: orderData.orders || [],
-                        clients: orderData.clients || [],
-                        stock: stockData || []
-                    };
+                    throw new Error(d.error || 'Failed to load fulfillment data');
                 });
             }
         };
@@ -2527,6 +2656,14 @@
         const storedEmail = localStorage.getItem("userEmail"); // Keep for display/history logic
 
         updateLoginUI(storedToken);
+        if (localStorage.getItem("isWholesale") === "true") {
+            document.getElementById("wholesaleBtn").style.display = "";
+            var wsEmail = localStorage.getItem("wsUserEmail") || storedEmail;
+            if (wsEmail) {
+                wsShowLoggedIn(wsEmail);
+                wsLoadProducts();
+            }
+        }
 
         // Load prices with token
         if (storedToken) {
@@ -2595,13 +2732,48 @@
                     // Success!
                     localStorage.setItem("authToken", res.token);
                     localStorage.setItem("userEmail", email);
+                    localStorage.setItem("userType", res.userType || 'user');
+                    localStorage.setItem("adminRole", res.adminRole || '');
 
-                    updateLoginUI(res.token);
                     closeLoginModal();
 
+                    // Determine access
+                    const userType = res.userType || 'user';
+                    const adminRole = res.adminRole || '';
+                    const canSeeOrder = (userType === 'user' || userType === 'both' || adminRole === 'sslAdmin');
+                    const canSeeWholesale = (userType === 'wholesale' || userType === 'both' || adminRole === 'wholesaleAdmin' || adminRole === 'sslAdmin');
+                    const canSeeAdmin = (adminRole === 'sslAdmin' || adminRole === 'wholesaleAdmin');
+
+                    // Wholesale access
+                    if (canSeeWholesale) {
+                        localStorage.setItem("isWholesale", "true");
+                        localStorage.setItem("wsAuthToken", res.token);
+                        localStorage.setItem("wsUserEmail", email);
+                        document.getElementById("wholesaleBtn").style.display = "";
+                        wsShowLoggedIn(email);
+                    } else {
+                        localStorage.removeItem("isWholesale");
+                        localStorage.removeItem("wsAuthToken");
+                        localStorage.removeItem("wsUserEmail");
+                        document.getElementById("wholesaleBtn").style.display = "none";
+                    }
+
+                    // Order page visibility
+                    var orderBtn = document.querySelector('.nav-btn');
+                    if (!canSeeOrder && userType === 'wholesale') {
+                        // Pure wholesale user — go to wholesale page, hide order
+                        showPage('page-wholesale', document.getElementById('wholesaleBtn'));
+                    } else {
+                        showPage('page-pricelist', orderBtn);
+                    }
+
+                    updateLoginUI(res.token);
+
                     // Refresh Data
-                    document.getElementById("cards").innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">Updating prices...</div>';
-                    google.script.run.withSuccessHandler(buildCards).getPriceList(res.token);
+                    if (canSeeOrder) {
+                        document.getElementById("cards").innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">Updating prices...</div>';
+                        google.script.run.withSuccessHandler(buildCards).getPriceList(res.token);
+                    }
                     Api.getLastPurchases(email);
                 } else {
                     alert("Verification failed. Check code.");
@@ -2615,19 +2787,26 @@
         function logout() {
             if (!confirm("Are you sure you want to logout? Prices will be hidden.")) return;
             localStorage.removeItem("userEmail");
-            localStorage.removeItem("authToken"); // Remove token
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("isWholesale");
+            localStorage.removeItem("wsAuthToken");
+            localStorage.removeItem("wsUserEmail");
+            localStorage.removeItem("userType");
+            localStorage.removeItem("adminRole");
 
             lastPurchases = []; historyMap = {}; baseNameMap = {}; // Clear history
             updateLoginUI(null);
+
+            // Hide wholesale nav
+            document.getElementById("wholesaleBtn").style.display = "none";
 
             // Refetch Data without email (masked)
             document.getElementById("cards").innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">Updating...</div>';
             google.script.run.withSuccessHandler(buildCards).getPriceList("");
         }
 
-        // Modified to check for TOKEN existence not just email
+        // Role-based UI update
         function updateLoginUI(token) {
-            const ADMIN_EMAIL = 'kinpatel1983@gmail.com';
             const loginBtn = document.getElementById("loginBtn");
             const logoutBtn = document.getElementById("logoutBtn");
             const adminBtn = document.getElementById("adminBpBtn");
@@ -2636,15 +2815,22 @@
             const statementBtn = document.getElementById("statementBtn");
             const guestCalcBtn = document.getElementById("guestCalcBtn");
             const guestCalcCardWrap = document.getElementById("guestCalcCardWrap");
-            const email = (localStorage.getItem("userEmail") || '').toLowerCase().trim();
+            const adminRole = localStorage.getItem("adminRole") || '';
+            const userType = localStorage.getItem("userType") || 'user';
+            const isAdmin = (adminRole === 'sslAdmin' || adminRole === 'wholesaleAdmin');
+
             if (token) {
                 loginBtn.style.display = "none";
                 logoutBtn.style.display = "inline-flex";
-                if (statementBtn) statementBtn.style.display = "inline-flex";
-                if (guestCalcBtn) guestCalcBtn.style.display = "inline-flex";
-                if (guestCalcCardWrap) guestCalcCardWrap.style.display = "block";
-                // Show admin buttons only for admin email
-                if (email === ADMIN_EMAIL) {
+
+                // Show user features based on type
+                const canSeeOrder = (userType === 'user' || userType === 'both' || adminRole === 'sslAdmin');
+                if (statementBtn) statementBtn.style.display = canSeeOrder ? "inline-flex" : "none";
+                if (guestCalcBtn) guestCalcBtn.style.display = canSeeOrder ? "inline-flex" : "none";
+                if (guestCalcCardWrap) guestCalcCardWrap.style.display = canSeeOrder ? "block" : "none";
+
+                // Show admin buttons only for admins
+                if (isAdmin) {
                     adminBtn.style.display = 'inline-flex';
                     if (adminAnalyticsBtn) adminAnalyticsBtn.style.display = 'inline-flex';
                     if (adminFulfillmentBtn) adminFulfillmentBtn.style.display = 'inline-flex';
@@ -2776,6 +2962,24 @@
         }
 
         function buildCards(data) {
+            // Session-expired detection: if user has a token but ALL prices=0, session expired
+            var hasToken = !!localStorage.getItem("authToken");
+            if (hasToken && data && data.length > 0) {
+                var allZero = data.every(function(r) { return !r[5] || Number(r[5]) === 0; });
+                if (allZero) {
+                    // Token is invalid/expired — force re-login
+                    localStorage.removeItem("authToken");
+                    localStorage.removeItem("userType");
+                    localStorage.removeItem("adminRole");
+                    updateLoginUI(null);
+                    document.getElementById("cards").innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem;">' +
+                        '<div style="font-size:2.5rem; margin-bottom:1rem;">🔒</div>' +
+                        '<h3 style="color:var(--text-color); margin-bottom:0.5rem;">Session Expired</h3>' +
+                        '<p style="color:var(--text-muted); margin-bottom:1.5rem;">Please login again to view prices.</p>' +
+                        '<button class="btn-primary" onclick="openLoginModal()">Login Now</button></div>';
+                    return;
+                }
+            }
             priceMap = {};
             namePackMap = {};
             allProducts = []; // Clear current list
@@ -6024,6 +6228,82 @@
         let analyticsData = null;
         let analyticsPeriod = '30';
 
+        function analyticsCheckWholesaleIssues() {
+            const token = localStorage.getItem('authToken');
+            if (!token) return alert('Please login as admin first.');
+
+            const modal = document.getElementById('wholesaleIssuesModal');
+            modal.style.display = 'flex';
+            document.getElementById('wholesaleIssuesContent').innerHTML = '<div style="text-align:center; padding:3rem;"><div style="width:40px;height:40px;border:3px solid rgba(139,92,246,0.3);border-top-color:#8b5cf6;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"></div><p style="color:#94a3b8;">Scanning WholesalePriceList...</p></div>';
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'getWholesaleErrors', data: { token } })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.error) throw new Error(d.error);
+                    const res = d.result;
+                    const mp = res.missingPrices || [];
+                    const mn = res.missingNames || [];
+                    let html = '';
+
+                    // Summary cards
+                    html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">';
+                    html += '<div style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05)); border:1px solid rgba(239,68,68,0.3); border-radius:14px; padding:1.2rem; text-align:center; animation:wsModalSlideIn 0.5s ease;">';
+                    html += '<div style="font-size:2rem; font-weight:800; color:#ef4444;">' + mp.length + '</div>';
+                    html += '<div style="font-size:0.8rem; color:#fca5a5; text-transform:uppercase; letter-spacing:1px;">Missing Prices</div></div>';
+                    html += '<div style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05)); border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:1.2rem; text-align:center; animation:wsModalSlideIn 0.6s ease;">';
+                    html += '<div style="font-size:2rem; font-weight:800; color:#f59e0b;">' + mn.length + '</div>';
+                    html += '<div style="font-size:0.8rem; color:#fcd34d; text-transform:uppercase; letter-spacing:1px;">Missing Names</div></div>';
+                    html += '</div>';
+
+                    // Missing Prices table
+                    html += '<div style="margin-bottom:1.5rem; animation:wsModalSlideIn 0.7s ease;">';
+                    html += '<h3 style="color:#ef4444; margin:0 0 0.8rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;">🚫 Items Without Price <span style="background:rgba(239,68,68,0.2); color:#fca5a5; padding:2px 10px; border-radius:20px; font-size:0.75rem;">' + mp.length + '</span></h3>';
+                    if (mp.length === 0) {
+                        html += '<div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:1rem; color:#34d399; text-align:center;">✅ All items have valid prices</div>';
+                    } else {
+                        html += '<div style="max-height:220px; overflow-y:auto; border-radius:12px; border:1px solid rgba(139,92,246,0.15);">';
+                        html += '<table style="width:100%; border-collapse:collapse; font-size:0.85rem;"><thead><tr>';
+                        html += '<th style="background:rgba(139,92,246,0.15); color:#c4b5fd; padding:0.7rem 1rem; text-align:left; position:sticky; top:0; font-weight:600;">Row</th>';
+                        html += '<th style="background:rgba(139,92,246,0.15); color:#c4b5fd; padding:0.7rem 1rem; text-align:left; position:sticky; top:0; font-weight:600;">Barcode</th>';
+                        html += '<th style="background:rgba(139,92,246,0.15); color:#c4b5fd; padding:0.7rem 1rem; text-align:left; position:sticky; top:0; font-weight:600;">Item Name</th>';
+                        html += '</tr></thead><tbody>';
+                        mp.forEach(function (item, idx) {
+                            var bg = idx % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)';
+                            html += '<tr style="background:' + bg + '; transition:background 0.2s;"><td style="padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#94a3b8;">' + item.row + '</td><td style="padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#e2e8f0; font-family:monospace;">' + (item.barcode || '—') + '</td><td style="padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#e2e8f0;">' + (item.name || '<i style=color:#ef4444>empty</i>') + '</td></tr>';
+                        });
+                        html += '</tbody></table></div>';
+                    }
+                    html += '</div>';
+
+                    // Missing Names table
+                    html += '<div style="animation:wsModalSlideIn 0.8s ease;">';
+                    html += '<h3 style="color:#f59e0b; margin:0 0 0.8rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;">📝 Items Without Name <span style="background:rgba(245,158,11,0.2); color:#fcd34d; padding:2px 10px; border-radius:20px; font-size:0.75rem;">' + mn.length + '</span></h3>';
+                    if (mn.length === 0) {
+                        html += '<div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:1rem; color:#34d399; text-align:center;">✅ All priced items have names</div>';
+                    } else {
+                        html += '<div style="max-height:220px; overflow-y:auto; border-radius:12px; border:1px solid rgba(139,92,246,0.15);">';
+                        html += '<table style="width:100%; border-collapse:collapse; font-size:0.85rem;"><thead><tr>';
+                        html += '<th style="background:rgba(245,158,11,0.15); color:#fcd34d; padding:0.7rem 1rem; text-align:left; position:sticky; top:0; font-weight:600;">Row</th>';
+                        html += '<th style="background:rgba(245,158,11,0.15); color:#fcd34d; padding:0.7rem 1rem; text-align:left; position:sticky; top:0; font-weight:600;">Barcode</th>';
+                        html += '<th style="background:rgba(245,158,11,0.15); color:#fcd34d; padding:0.7rem 1rem; text-align:left; position:sticky; top:0; font-weight:600;">Price</th>';
+                        html += '</tr></thead><tbody>';
+                        mn.forEach(function (item, idx) {
+                            var bg = idx % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)';
+                            html += '<tr style="background:' + bg + ';"><td style="padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#94a3b8;">' + item.row + '</td><td style="padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#e2e8f0; font-family:monospace;">' + (item.barcode || '—') + '</td><td style="padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); color:#10b981; font-weight:600;">TZS ' + Number(item.price).toLocaleString() + '</td></tr>';
+                        });
+                        html += '</tbody></table></div>';
+                    }
+                    html += '</div>';
+
+                    document.getElementById('wholesaleIssuesContent').innerHTML = html;
+                })
+                .catch(e => {
+                    document.getElementById('wholesaleIssuesContent').innerHTML = '<div style="text-align:center; padding:2rem;"><div style="font-size:2.5rem; margin-bottom:0.8rem;">❌</div><p style="color:#ef4444; font-weight:600;">Error loading report</p><p style="color:#94a3b8; font-size:0.85rem;">' + e.message + '</p></div>';
+                });
+        }
         function analyticsLoadData() {
             const token = localStorage.getItem('authToken');
             if (!token) { alert('Please login first.'); return; }
@@ -7250,6 +7530,331 @@
 
     </script>
 
+    <!-- ===== WHOLESALE PORTAL SCRIPT ===== -->
+    <script>
+        /* ===== WHOLESALE PORTAL LOGIC ===== */
+        let wsAllProducts = [];
+        let wsFilteredProducts = [];
+
+        // Check wholesale session on load (supports both dedicated ws login and main login)
+        (function initWholesale() {
+            const wsToken = localStorage.getItem('wsAuthToken');
+            const wsEmail = localStorage.getItem('wsUserEmail') || localStorage.getItem('userEmail');
+            if (wsToken && wsEmail) {
+                wsShowLoggedIn(wsEmail);
+                wsLoadProducts();
+            }
+        })();
+
+        /* ----- Wholesale Login Modal ----- */
+        function openWholesaleLoginModal() {
+            document.getElementById('wsLoginModal').style.display = 'flex';
+            document.getElementById('wsLoginStep1').style.display = 'block';
+            document.getElementById('wsLoginStep2').style.display = 'none';
+            document.getElementById('wsLoginEmail').value = '';
+            document.getElementById('wsLoginEmail').focus();
+        }
+        function closeWholesaleLoginModal() {
+            document.getElementById('wsLoginModal').style.display = 'none';
+        }
+        function wsBackToEmail() {
+            document.getElementById('wsLoginStep1').style.display = 'block';
+            document.getElementById('wsLoginStep2').style.display = 'none';
+        }
+
+        function requestWholesaleCode() {
+            const email = document.getElementById('wsLoginEmail').value.trim().toLowerCase();
+            const btn = document.getElementById('wsOtpBtn');
+            if (!email || !email.includes('@')) { alert('Please enter a valid email'); return; }
+            if (!API_URL) { alert('API URL not configured. Please set API_URL.'); return; }
+
+            btn.innerText = 'Sending...';
+            btn.disabled = true;
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'requestWholesaleOtp', data: { email } })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    btn.innerText = 'Get Code';
+                    btn.disabled = false;
+                    if (d.result && d.result.success) {
+                        document.getElementById('wsLoginStep1').style.display = 'none';
+                        document.getElementById('wsLoginStep2').style.display = 'block';
+                        document.getElementById('wsLoginOtp').value = '';
+                        document.getElementById('wsLoginOtp').focus();
+                    } else if (d.error) {
+                        alert(d.error);
+                    }
+                })
+                .catch(e => {
+                    btn.innerText = 'Get Code';
+                    btn.disabled = false;
+                    alert('Network Error: ' + e.message);
+                });
+        }
+
+        function completeWholesaleLogin() {
+            const email = document.getElementById('wsLoginEmail').value.trim().toLowerCase();
+            const code = document.getElementById('wsLoginOtp').value.trim();
+            const btn = document.getElementById('wsVerifyBtn');
+
+            if (code.length < 4) { alert('Please enter the full code'); return; }
+
+            btn.innerText = 'Verifying...';
+            btn.disabled = true;
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'verifyWholesaleOtp', data: { email, code } })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    btn.innerText = 'Verify';
+                    btn.disabled = false;
+
+                    if (d.result && d.result.success && d.result.token) {
+                        localStorage.setItem('wsAuthToken', d.result.token);
+                        localStorage.setItem('wsUserEmail', email);
+                        closeWholesaleLoginModal();
+                        wsShowLoggedIn(email);
+                        wsLoadProducts();
+                    } else if (d.error) {
+                        alert(d.error);
+                    } else {
+                        alert('Verification failed. Please try again.');
+                    }
+                })
+                .catch(e => {
+                    btn.innerText = 'Verify';
+                    btn.disabled = false;
+                    alert('Network Error: ' + e.message);
+                });
+        }
+
+        function wholesaleLogout() {
+            if (!confirm('Are you sure you want to logout from Wholesale?')) return;
+            localStorage.removeItem('wsAuthToken');
+            localStorage.removeItem('wsUserEmail');
+            wsAllProducts = [];
+            wsFilteredProducts = [];
+            document.getElementById('wsContent').style.display = 'none';
+            document.getElementById('wsLoginRequired').style.display = 'flex';
+            document.getElementById('wsProductsGrid').innerHTML = '';
+        }
+
+        function wsShowLoggedIn(email) {
+            document.getElementById('wsLoginRequired').style.display = 'none';
+            document.getElementById('wsContent').style.display = 'block';
+            var wsEmailEl = document.getElementById('wsUserEmail');
+            if (wsEmailEl) wsEmailEl.textContent = email;
+            // Auto-load products if not already loaded
+            if (wsAllProducts.length === 0) {
+                wsLoadProducts();
+            }
+        }
+
+        /* ----- Load Products ----- */
+        function wsLoadProducts() {
+            const token = localStorage.getItem('wsAuthToken');
+            if (!token) return;
+            if (!API_URL) {
+                document.getElementById('wsProductsGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem; color:#ef4444;">⚠️ API URL not configured. Please deploy Code.gs and set the URL.</div>';
+                return;
+            }
+
+            document.getElementById('wsLoading').style.display = 'block';
+            document.getElementById('wsProductsGrid').innerHTML = '';
+            document.getElementById('wsEmpty').style.display = 'none';
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'getWholesaleList', data: { token } })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    document.getElementById('wsLoading').style.display = 'none';
+                    if (d.result) {
+                        // Filter out items with no price or no name
+                        wsAllProducts = d.result.filter(p => p.itemName && p.price > 0);
+                        document.getElementById('wsProductCount').textContent = wsAllProducts.length;
+
+                        // Add to main priceMap so the standard cart system can process wholesale items
+                        wsAllProducts.forEach(p => {
+                            if (p.barcode) {
+                                priceMap[p.barcode] = {
+                                    barcode: p.barcode,
+                                    name: p.itemName || 'Unnamed',
+                                    pack: p.packing || '—',
+                                    price: Number(p.price) || 0,
+                                    cat: 'Wholesale',
+                                    isWholesale: true
+                                };
+                            }
+                        });
+
+                        wsFilterProducts();
+                    } else if (d.error) {
+                        // Token expired — show login again
+                        if (d.error.includes('expired') || d.error.includes('authorized')) {
+                            wholesaleLogout();
+                            alert('Session expired. Please login again.');
+                        } else {
+                            alert(d.error);
+                        }
+                    }
+                })
+                .catch(e => {
+                    document.getElementById('wsLoading').style.display = 'none';
+                    alert('Failed to load wholesale products: ' + e.message);
+                });
+        }
+
+        /* ----- Wholesale UI Controls ----- */
+        function wsSetView(mode) {
+            const grid = document.getElementById("wsProductsGrid");
+            const gridBtn = document.getElementById("wsGridBtn");
+            const listBtn = document.getElementById("wsListBtn");
+            if (!grid || !gridBtn || !listBtn) return;
+
+            if (mode === 'list') {
+                grid.classList.add("list-view");
+                gridBtn.classList.remove("active");
+                listBtn.classList.add("active");
+            } else {
+                grid.classList.remove("list-view");
+                listBtn.classList.remove("active");
+                gridBtn.classList.add("active");
+            }
+        }
+
+        function toggleWsDraftMenu() {
+            const m = document.getElementById("wsDraftMenu");
+            if (m) m.style.display = (m.style.display === "none" || m.style.display === "") ? "block" : "none";
+        }
+        function closeWsDraftMenu() {
+            const m = document.getElementById("wsDraftMenu");
+            if (m) m.style.display = "none";
+        }
+
+        /* ----- Filter & Render Products ----- */
+        function wsFilterProducts() {
+            const query = (document.getElementById('wsSearch').value || '').toLowerCase().trim();
+            wsFilteredProducts = wsAllProducts.filter(p => {
+                if (!query) return true;
+                return (p.itemName || '').toLowerCase().includes(query) ||
+                    (p.barcode || '').toLowerCase().includes(query) ||
+                    (p.packing || '').toLowerCase().includes(query);
+            });
+
+            wsRenderCards();
+        }
+
+        function wsRenderCards() {
+            const grid = document.getElementById('wsProductsGrid');
+            const emptyEl = document.getElementById('wsEmpty');
+
+            if (wsFilteredProducts.length === 0) {
+                grid.innerHTML = '';
+                emptyEl.style.display = 'block';
+                return;
+            }
+
+            emptyEl.style.display = 'none';
+
+            // Render max 100 cards for performance
+            const MAX = 100;
+            const items = wsFilteredProducts.slice(0, MAX);
+
+            let html = '';
+            items.forEach((item, idx) => {
+                const price = Number(item.price) || 0;
+                const priceDisplay = price > 0 ? `TZS ${price.toLocaleString()}` : '<span style="color:#9ca3af;">—</span>';
+                const delay = Math.min(idx * 0.03, 1.5);
+                const safeBarcode = item.barcode || '';
+
+                // Mirroring the standard product card layout from the order page
+                const addBtnHtml = `<button class="add-btn add-btn-mini" onclick="addToCartFromGrid('${safeBarcode}', 'ws_qty_${safeBarcode}', this)">＋</button>`;
+
+                html += `
+                <div class="product-card" style="animation-delay:${delay}s;">
+                    <div class="card-header">
+                        <div class="card-title">${item.itemName || 'Unnamed Item'}</div>
+                        <div class="card-meta">
+                            <span class="card-pack">📦 ${item.packing || '—'}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="price-tag">${priceDisplay}</div>
+                        <div class="add-controls">
+                            <input class="qty qty-input" type="number" min="1" value="1" id="ws_qty_${safeBarcode}">
+                            ${addBtnHtml}
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            if (wsFilteredProducts.length > MAX) {
+                html += `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#6b7280;">
+                    Showing ${MAX} of ${wsFilteredProducts.length} products. Refine your search to see more.
+                </div>`;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        /* ----- Hook into showPage for wholesale auto-load ----- */
+        (function () {
+            const _prevShowPage = showPage;
+            showPage = function (pageId, btn) {
+                _prevShowPage(pageId, btn);
+                if (pageId === 'page-wholesale') {
+                    const wsToken = localStorage.getItem('wsAuthToken');
+                    if (wsToken && wsAllProducts.length === 0) {
+                        wsLoadProducts();
+                    }
+                }
+            };
+        })();
+    </script>
+
+    <!-- Wholesale Data Issues Modal -->
+    <div id="wholesaleIssuesModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); align-items:center; justify-content:center;">
+        <div id="wsErrorModalInner"
+            style="background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%); border-radius:20px; max-width:800px; width:92%; max-height:85vh; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.2); animation:wsModalSlideIn 0.4s cubic-bezier(0.16,1,0.3,1);">
+            <!-- Header -->
+            <div
+                style="background:linear-gradient(135deg,#7c3aed,#6d28d9); padding:1.5rem 2rem; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="margin:0; color:white; font-size:1.4rem; font-weight:700;">⚠️ Wholesale Data Issues</h2>
+                    <p style="margin:0.3rem 0 0; color:rgba(255,255,255,0.7); font-size:0.85rem;">Items needing
+                        attention in WholesalePriceList</p>
+                </div>
+                <button onclick="document.getElementById('wholesaleIssuesModal').style.display='none'"
+                    style="background:rgba(255,255,255,0.15); border:none; color:white; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s;">✕</button>
+            </div>
+            <!-- Body -->
+            <div id="wholesaleIssuesContent"
+                style="padding:1.5rem 2rem; overflow-y:auto; max-height:calc(85vh - 80px); color:#e2e8f0;">
+                <p style="text-align:center; color:#94a3b8;">Loading report...</p>
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes wsModalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
 </body>
 
 
