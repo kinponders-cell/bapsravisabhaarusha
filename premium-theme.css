@@ -877,10 +877,19 @@ a[href*="wa.me"]:hover {
     box-shadow: var(--shadow-xl);
 }
 
-[data-theme="dark"] #draftMenu {
+[data-theme="dark"] #draftMenu,
+[data-theme="dark"] #wsDraftMenu {
     background: var(--bg-card);
     border-color: rgba(255, 255, 255, 0.06);
     box-shadow: var(--shadow-xl);
+}
+
+[data-theme="dark"] #wsDraftMenu .nav-btn {
+    color: var(--text-main);
+}
+
+[data-theme="dark"] #wsDraftMenu .nav-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 [data-theme="dark"] .panel-btn {
