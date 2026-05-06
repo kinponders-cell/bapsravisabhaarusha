@@ -346,12 +346,13 @@
             box-shadow: 0 2px 8px rgba(249, 115, 22, .3)
         }
 
+        /* ── PREMIUM KPI STRIP ── */
         .ff-kpi-strip {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+            gap: 1.25rem;
             padding: 0 2rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             max-width: 1400px;
             margin-left: auto;
             margin-right: auto
@@ -359,16 +360,61 @@
 
         .ff-kpi-card {
             position: relative;
-            background: white;
-            border-radius: 16px;
-            padding: 1.25rem;
-            border: 1px solid rgba(0, 0, 0, .06);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+            background: linear-gradient(135deg, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, .85) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem 1.5rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, .6);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04), inset 0 1px 0 rgba(255, 255, 255, .8);
             overflow: hidden;
-            transition: all .3s cubic-bezier(.4, 0, .2, 1);
+            transition: all .4s cubic-bezier(.4, 0, .2, 1);
             opacity: 0;
-            transform: translateY(20px);
-            animation: ffKpiIn .5s ease forwards
+            transform: translateY(30px) scale(.97);
+            animation: ffKpiIn .6s cubic-bezier(.22, 1, .36, 1) forwards
+        }
+
+        /* Animated gradient border shimmer */
+        .ff-kpi-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1.5px;
+            background: linear-gradient(135deg, transparent 30%, rgba(251, 146, 60, .4) 50%, transparent 70%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity .4s
+        }
+
+        .ff-kpi-card:hover::before {
+            opacity: 1
+        }
+
+        /* Shimmer sweep */
+        .ff-kpi-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, .4) 50%, transparent 100%);
+            transform: skewX(-20deg);
+            transition: none;
+            pointer-events: none
+        }
+
+        .ff-kpi-card:hover::after {
+            animation: ffShimmer .8s ease forwards
+        }
+
+        @keyframes ffShimmer {
+            to {
+                left: 150%
+            }
         }
 
         .ff-kpi-card:nth-child(1) {
@@ -376,70 +422,116 @@
         }
 
         .ff-kpi-card:nth-child(2) {
-            animation-delay: .1s
+            animation-delay: .12s
         }
 
         .ff-kpi-card:nth-child(3) {
-            animation-delay: .2s
+            animation-delay: .24s
         }
 
         .ff-kpi-card:nth-child(4) {
-            animation-delay: .3s
+            animation-delay: .36s
         }
 
         @keyframes ffKpiIn {
             to {
                 opacity: 1;
-                transform: translateY(0)
+                transform: translateY(0) scale(1)
             }
         }
 
         .ff-kpi-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, .08)
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .06)
         }
 
+        /* Glowing icon orb */
         .ff-kpi-icon {
             position: absolute;
             top: 16px;
             right: 16px;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            transition: transform .3s
+            font-size: 1.4rem;
+            transition: all .4s cubic-bezier(.4, 0, .2, 1);
+            animation: ffIconPulse 3s ease-in-out infinite
+        }
+
+        @keyframes ffIconPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, .15)
+            }
+
+            50% {
+                box-shadow: 0 6px 20px rgba(0, 0, 0, .25)
+            }
         }
 
         .ff-kpi-card:hover .ff-kpi-icon {
-            transform: scale(1.1) rotate(-5deg)
+            transform: scale(1.15) rotate(-8deg);
+            filter: brightness(1.1)
         }
 
         .ff-kpi-label {
-            font-size: .7rem;
-            font-weight: 600;
-            color: #6b7280;
+            font-size: .68rem;
+            font-weight: 700;
+            color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: .06em;
-            margin-bottom: 4px
+            letter-spacing: .08em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .ff-kpi-label::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: .4;
+            animation: ffDotPulse 2s ease-in-out infinite
+        }
+
+        @keyframes ffDotPulse {
+
+            0%,
+            100% {
+                opacity: .3;
+                transform: scale(.8)
+            }
+
+            50% {
+                opacity: .7;
+                transform: scale(1)
+            }
         }
 
         .ff-kpi-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #111827;
-            line-height: 1.2;
-            letter-spacing: -.02em
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+            letter-spacing: -.03em;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif
         }
 
         .ff-kpi-sub {
-            font-size: .75rem;
-            color: #9ca3af;
-            margin-top: 4px
+            font-size: .72rem;
+            color: #a1a1aa;
+            margin-top: 6px;
+            font-weight: 500;
+            letter-spacing: .01em
         }
 
+        /* ── PREMIUM GAUGE ── */
         .ff-gauge-wrap {
             display: flex;
             align-items: center;
@@ -448,8 +540,9 @@
 
         .ff-gauge-ring {
             position: relative;
-            width: 60px;
-            height: 60px
+            width: 68px;
+            height: 68px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .08))
         }
 
         .ff-gauge-ring svg {
@@ -458,16 +551,17 @@
 
         .ff-gauge-ring circle {
             fill: none;
-            stroke-width: 6;
+            stroke-width: 5;
             stroke-linecap: round
         }
 
         .ff-gauge-bg {
-            stroke: #f3f4f6
+            stroke: #e2e8f0
         }
 
         .ff-gauge-fill {
-            transition: stroke-dashoffset 1s ease
+            transition: stroke-dashoffset 1.5s cubic-bezier(.4, 0, .2, 1);
+            filter: drop-shadow(0 0 6px currentColor)
         }
 
         .ff-gauge-text {
@@ -476,11 +570,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: .85rem;
-            font-weight: 700;
-            color: #111827
+            font-size: .9rem;
+            font-weight: 800;
+            color: #0f172a;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif
         }
 
+        /* ── PREMIUM SUMMARY STRIP ── */
         .ff-summary-strip {
             display: flex;
             gap: 1rem;
@@ -495,44 +591,118 @@
         .ff-summary-card {
             flex: 1;
             min-width: 200px;
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            border: 1px solid rgba(0, 0, 0, .06);
+            position: relative;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .97) 0%, rgba(248, 250, 252, .9) 100%);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 1.15rem 1.25rem;
+            border: 1px solid rgba(0, 0, 0, .04);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .04), inset 0 1px 0 rgba(255, 255, 255, .9);
             display: flex;
             align-items: center;
-            gap: .75rem;
+            gap: 1rem;
+            transition: all .35s cubic-bezier(.4, 0, .2, 1);
+            cursor: default;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: ffSummaryIn .5s ease forwards
+        }
+
+        .ff-summary-card:nth-child(1) {
+            animation-delay: .05s
+        }
+
+        .ff-summary-card:nth-child(2) {
+            animation-delay: .12s
+        }
+
+        .ff-summary-card:nth-child(3) {
+            animation-delay: .19s
+        }
+
+        .ff-summary-card:nth-child(4) {
+            animation-delay: .26s
+        }
+
+        @keyframes ffSummaryIn {
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Colored left accent bar */
+        .ff-summary-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15%;
+            bottom: 15%;
+            width: 3.5px;
+            border-radius: 0 4px 4px 0;
+            background: var(--ff-accent, #94a3b8);
             transition: all .3s;
-            cursor: default
+            opacity: .6
+        }
+
+        .ff-summary-card:hover::before {
+            top: 8%;
+            bottom: 8%;
+            opacity: 1;
+            width: 4px
         }
 
         .ff-summary-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, .06)
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .08), 0 4px 8px rgba(0, 0, 0, .04)
         }
 
         .ff-summary-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            flex-shrink: 0
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            transition: all .3s;
+            position: relative
+        }
+
+        /* Icon glow ring */
+        .ff-summary-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 16px;
+            background: inherit;
+            opacity: .2;
+            filter: blur(6px);
+            z-index: -1
+        }
+
+        .ff-summary-card:hover .ff-summary-icon {
+            transform: scale(1.1) rotate(-3deg)
         }
 
         .ff-summary-val {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #111827
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+            letter-spacing: -.02em;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif
         }
 
         .ff-summary-lbl {
-            font-size: .7rem;
-            color: #6b7280;
+            font-size: .68rem;
+            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: .04em
+            letter-spacing: .05em;
+            font-weight: 600;
+            margin-top: 2px
         }
 
         .ff-table-container {
@@ -754,6 +924,15 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, .4)
         }
 
+        /* Expiry column toggle */
+        .ff-expiry-col {
+            display: none
+        }
+
+        .ff-table.ff-show-expiry .ff-expiry-col {
+            display: table-cell
+        }
+
         .ff-loading,
         .ff-empty {
             text-align: center;
@@ -773,12 +952,29 @@
                 margin: 0 1rem 2rem;
                 padding: 0 1rem
             }
+
+            .ff-summary-strip {
+                padding: 0 1rem
+            }
+
+            .ff-summary-card {
+                min-width: 160px
+            }
         }
 
         @media(max-width:640px) {
             .ff-kpi-strip {
                 grid-template-columns: 1fr;
-                padding: 0 1rem
+                padding: 0 1rem;
+                gap: 1rem
+            }
+
+            .ff-kpi-card {
+                padding: 1.25rem 1.25rem 1rem
+            }
+
+            .ff-kpi-value {
+                font-size: 1.6rem
             }
 
             .ff-hero-title {
@@ -797,6 +993,267 @@
             .ff-table {
                 font-size: .75rem
             }
+
+            .ff-summary-strip {
+                padding: 0 1rem;
+                gap: .75rem
+            }
+
+            .ff-summary-card {
+                min-width: 100%;
+                padding: 1rem
+            }
+
+            .ff-summary-val {
+                font-size: 1.1rem
+            }
+        }
+
+        /* ══════════════════════════════════════════════
+           DARK MODE — Fulfillment Report Overrides
+           ══════════════════════════════════════════════ */
+
+        /* Hero */
+        [data-theme="dark"] .ff-hero {
+            background: linear-gradient(135deg, #0a0f1a 0%, #111827 50%, #0a0f1a 100%)
+        }
+
+        [data-theme="dark"] .ff-hero::before {
+            background: radial-gradient(ellipse at 30% 50%, rgba(251, 146, 60, .1) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 50%, rgba(239, 68, 68, .06) 0%, transparent 50%)
+        }
+
+        /* Controls */
+        [data-theme="dark"] .ff-date-group {
+            background: #1e293b;
+            border-color: #334155
+        }
+
+        [data-theme="dark"] .ff-date-input {
+            color: #e2e8f0;
+            background: transparent
+        }
+
+        [data-theme="dark"] .ff-date-sep {
+            color: #64748b
+        }
+
+        [data-theme="dark"] .ff-quick-btn {
+            background: #1e293b;
+            border-color: #334155;
+            color: #94a3b8
+        }
+
+        [data-theme="dark"] .ff-quick-btn:hover {
+            border-color: #fb923c;
+            color: #fb923c;
+            background: rgba(251, 146, 60, .08)
+        }
+
+        [data-theme="dark"] .ff-quick-btn.active {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: white;
+            border-color: transparent
+        }
+
+        /* ── KPI Cards ── */
+        [data-theme="dark"] .ff-kpi-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, .95) 0%, rgba(22, 32, 50, .9) 100%);
+            border-color: rgba(255, 255, 255, .06);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .25), 0 1px 2px rgba(0, 0, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .04)
+        }
+
+        [data-theme="dark"] .ff-kpi-card::before {
+            background: linear-gradient(135deg, transparent 30%, rgba(251, 146, 60, .25) 50%, transparent 70%)
+        }
+
+        [data-theme="dark"] .ff-kpi-card::after {
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, .06) 50%, transparent 100%)
+        }
+
+        [data-theme="dark"] .ff-kpi-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .4), 0 8px 16px rgba(0, 0, 0, .3)
+        }
+
+        [data-theme="dark"] .ff-kpi-label {
+            color: #64748b
+        }
+
+        [data-theme="dark"] .ff-kpi-value {
+            color: #f1f5f9
+        }
+
+        [data-theme="dark"] .ff-kpi-sub {
+            color: #4b5563
+        }
+
+        /* Gauge */
+        [data-theme="dark"] .ff-gauge-bg {
+            stroke: #334155
+        }
+
+        [data-theme="dark"] .ff-gauge-text {
+            color: #f1f5f9
+        }
+
+        /* ── Summary / Margin Cards ── */
+        [data-theme="dark"] .ff-summary-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, .95) 0%, rgba(22, 32, 50, .88) 100%);
+            border-color: rgba(255, 255, 255, .05);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .03)
+        }
+
+        [data-theme="dark"] .ff-summary-card:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .35), 0 4px 8px rgba(0, 0, 0, .2)
+        }
+
+        [data-theme="dark"] .ff-summary-icon {
+            opacity: .9
+        }
+
+        /* Dark mode margin icon backgrounds — keep gradient but darken */
+        [data-theme="dark"] .ff-summary-icon[style*="fee2e2"] {
+            background: linear-gradient(135deg, rgba(239, 68, 68, .2), rgba(220, 38, 38, .15)) !important
+        }
+
+        [data-theme="dark"] .ff-summary-icon[style*="fef3c7"] {
+            background: linear-gradient(135deg, rgba(245, 158, 11, .2), rgba(217, 119, 6, .15)) !important
+        }
+
+        [data-theme="dark"] .ff-summary-icon[style*="dcfce7"],
+        [data-theme="dark"] .ff-summary-icon[style*="bbf7d0"] {
+            background: linear-gradient(135deg, rgba(16, 185, 129, .2), rgba(5, 150, 105, .15)) !important
+        }
+
+        [data-theme="dark"] .ff-summary-icon[style*="ede9fe"],
+        [data-theme="dark"] .ff-summary-icon[style*="ddd6fe"] {
+            background: linear-gradient(135deg, rgba(139, 92, 246, .2), rgba(124, 58, 237, .15)) !important
+        }
+
+        [data-theme="dark"] .ff-summary-icon[style*="fde68a"] {
+            background: linear-gradient(135deg, rgba(245, 158, 11, .2), rgba(217, 119, 6, .15)) !important
+        }
+
+        [data-theme="dark"] .ff-summary-val {
+            color: #f1f5f9
+        }
+
+        [data-theme="dark"] .ff-summary-lbl {
+            color: #64748b
+        }
+
+        /* ── Table Container ── */
+        [data-theme="dark"] .ff-table-container {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .25)
+        }
+
+        [data-theme="dark"] .ff-table-header {
+            border-bottom-color: #334155
+        }
+
+        [data-theme="dark"] .ff-table-title {
+            color: #f1f5f9
+        }
+
+        [data-theme="dark"] .ff-table-count {
+            background: #334155;
+            color: #94a3b8
+        }
+
+        [data-theme="dark"] .ff-search-input {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0
+        }
+
+        [data-theme="dark"] .ff-search-input:focus {
+            border-color: #fb923c;
+            box-shadow: 0 0 0 3px rgba(251, 146, 60, .15)
+        }
+
+        /* Table rows */
+        [data-theme="dark"] .ff-table thead th {
+            color: #64748b;
+            border-bottom-color: #334155
+        }
+
+        [data-theme="dark"] .ff-table thead th:hover {
+            color: #e2e8f0
+        }
+
+        [data-theme="dark"] .ff-table tbody tr {
+            border-bottom-color: rgba(51, 65, 85, .5)
+        }
+
+        [data-theme="dark"] .ff-table tbody td {
+            color: #cbd5e1
+        }
+
+        [data-theme="dark"] .ff-table tbody tr:hover {
+            background: rgba(251, 191, 36, .04)
+        }
+
+        [data-theme="dark"] .ff-table tbody tr.ff-row-ok:hover {
+            background: rgba(16, 185, 129, .06)
+        }
+
+        [data-theme="dark"] .ff-table tbody tr.ff-row-low:hover {
+            background: rgba(245, 158, 11, .06)
+        }
+
+        [data-theme="dark"] .ff-table tbody tr.ff-row-out:hover {
+            background: rgba(239, 68, 68, .06)
+        }
+
+        /* Status badges */
+        [data-theme="dark"] .ff-status-ok {
+            background: rgba(16, 185, 129, .15);
+            color: #34d399
+        }
+
+        [data-theme="dark"] .ff-status-low {
+            background: rgba(245, 158, 11, .15);
+            color: #fbbf24
+        }
+
+        [data-theme="dark"] .ff-status-out {
+            background: rgba(239, 68, 68, .15);
+            color: #f87171
+        }
+
+        /* Shortfall bars */
+        [data-theme="dark"] .ff-shortfall-bar {
+            background: #334155
+        }
+
+        /* Alternative suggestions */
+        [data-theme="dark"] .ff-alt-item {
+            color: #94a3b8
+        }
+
+        [data-theme="dark"] .ff-alt-dot {
+            background: #34d399
+        }
+
+        [data-theme="dark"] .ff-alt-stock {
+            color: #34d399
+        }
+
+        /* Export button */
+        [data-theme="dark"] .ff-export-btn {
+            box-shadow: 0 2px 8px rgba(16, 185, 129, .2)
+        }
+
+        [data-theme="dark"] .ff-export-btn:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, .3)
+        }
+
+        /* Loading / Empty states */
+        [data-theme="dark"] .ff-loading p,
+        [data-theme="dark"] .ff-empty p {
+            color: #64748b
         }
     </style>
 </head>
@@ -825,7 +1282,7 @@
             <button class="nav-btn" onclick="showPage('page-stock', this)">
                 <img src="https://drive.google.com/thumbnail?id=1Ngx-1FD5JJxmyMTKEA5mZCMaOQ29w1uv"> Stock
             </button>
-            <button class="nav-btn" onclick="showPage('page-new', this)">
+            <button class="nav-btn" onclick="showPage('page-new', this)" style="display:none;">
                 <img src="https://drive.google.com/thumbnail?id=1zmftlvW426-bQWW3Yd6raiQyHwQ2tuoz"> Eco
             </button>
             <button class="nav-btn" onclick="showPage('page-guest-calc', this)" id="guestCalcBtn" style="display:none;">
@@ -860,7 +1317,9 @@
                 id="adminFulfillmentBtn" style="display:none;">
                 📋 Fulfillment
             </button>
-            <button class="nav-btn" onclick="showPage('page-statement', this)" id="statementBtn" style="display:none;">
+            <!-- Statement hidden -->
+            <button class="nav-btn" onclick="showPage('page-statement', this)" id="statementBtn"
+                style="display:none !important;">
                 🧾 Statement
             </button>
             <button class="nav-btn" onclick="toggleTheme()" id="themeToggleBtn"
@@ -1757,6 +2216,44 @@
             </div>
         </div>
 
+        <!-- Margin Analyzer Row -->
+        <div class="bp-table-container" style="margin-bottom: 1.5rem; border-top: 4px solid #8b5cf6;">
+            <div class="bp-table-header" style="justify-content: space-between; flex-wrap: wrap;">
+                <div class="bp-table-title">📉 Wholesale Margin Analyzer</div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="analyticsMarginSearch" placeholder="🔍 Search items..."
+                        class="bp-search-input" style="width:150px; margin-right:10px;"
+                        oninput="analyticsRenderMargin()">
+                    <label style="font-size:0.85rem; font-weight:600; color:#6b7280;">Target Margin %:</label>
+                    <input type="number" id="analyticsMarginTarget" value="20" class="bp-select" style="width: 80px;"
+                        oninput="analyticsRenderMargin()">
+                    <button class="bp-refresh-btn" style="background:#8b5cf6; color:white; border-color:#8b5cf6;"
+                        onclick="analyticsLoadMarginData()" id="analyticsMarginBtn">
+                        Analyze Wholesale Prices
+                    </button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="bp-table" id="analyticsMarginTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Barcode</th>
+                            <th style="text-align:right;">Avg Cost (G)</th>
+                            <th style="text-align:right;">Selling Price</th>
+                            <th style="text-align:right;">Margin %</th>
+                            <th style="text-align:center;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="analyticsMarginBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding: 2rem; color: #6b7280;">Click "Analyze
+                                Wholesale Prices" to load data</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <!-- Detailed Table -->
         <div class="bp-table-container">
             <div class="bp-table-header">
@@ -1823,6 +2320,7 @@
         <div id="fulfillmentContent" style="display:none;">
             <!-- Summary by status -->
             <div class="ff-summary-strip" id="fulfillmentSummary"></div>
+            <div class="ff-summary-strip" id="fulfillmentMarginCards" style="margin-top:1rem;"></div>
 
             <div class="ff-table-container">
                 <div class="ff-table-header">
@@ -1832,10 +2330,15 @@
                         <input class="ff-search-input" id="fulfillmentSearch" placeholder="🔍 Search items..."
                             oninput="fulfillmentRender()">
                         <button class="ff-export-btn" onclick="fulfillmentExport()">⬇️ Export Excel</button>
+                        <button id="ffExpiryToggleBtn"
+                            onclick="fulfillmentToggleExpiry()"
+                            style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:10px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit">
+                            🗓 Show Expiry
+                        </button>
                     </div>
                 </div>
                 <div style="overflow-x:auto;">
-                    <table class="ff-table">
+                    <table class="ff-table" id="fulfillmentTable">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -1846,8 +2349,10 @@
                                 <th onclick="fulfillmentSort('ordered')" style="text-align:right;">Ordered ↕</th>
                                 <th onclick="fulfillmentSort('stock')" style="text-align:right;">System Stock ↕</th>
                                 <th onclick="fulfillmentSort('shortfall')" style="text-align:right;">Shortfall ↕</th>
+                                <th onclick="fulfillmentSort('margin')" style="text-align:right;">Margin % ↕</th>
                                 <th style="text-align:center;">Status</th>
                                 <th>Suggested Alternatives</th>
+                                <th class="ff-expiry-col">🗓 Expiry Suggestion (FEFO)</th>
                             </tr>
                         </thead>
                         <tbody id="fulfillmentTableBody"></tbody>
@@ -2517,7 +3022,7 @@
     </script>
     <script>
         // CONFIG
-        const API_URL = "https://script.google.com/macros/s/AKfycbygz0ZGqq2r93fop1UC0nOU6o42KYSF8OG0rkG0mmlk9zWGMLAdgTZqfnFTmagCeVA/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzNWsgyBOKFQPi1dWujdn2N4G2EUETxnj3Pd_4RgcCdk6KzMwsx3zEtEpZB1np8OHrZ/exec";
         // Update this URL with your newly deployed Google Apps Script URL for Data5555:
         const STATEMENT_API_URL = "";
         const STOCK_API_URL = "";
@@ -2842,7 +3347,8 @@
 
                 // Show user features based on type
                 const canSeeOrder = (userType === 'user' || userType === 'both' || adminRole === 'sslAdmin');
-                if (statementBtn) statementBtn.style.display = canSeeOrder ? "inline-flex" : "none";
+                // Statement hidden per request
+                // if (statementBtn) statementBtn.style.display = canSeeOrder ? "inline-flex" : "none";
                 if (guestCalcBtn) guestCalcBtn.style.display = canSeeOrder ? "inline-flex" : "none";
                 if (guestCalcCardWrap) guestCalcCardWrap.style.display = canSeeOrder ? "block" : "none";
 
@@ -3203,6 +3709,34 @@
                 btn.innerHTML = "✓";
                 setTimeout(() => { btn.innerHTML = original; }, 1000);
             });
+        }
+
+        function proposePriceFromGrid(barcode, inputId) {
+            const item = priceMap[barcode];
+            if (!item) return;
+            const qtyInput = document.getElementById(inputId);
+            const qty = Number(qtyInput.value) || 1;
+
+            const suggested = prompt("Propose a price for " + item.name + " (Current: " + item.price + " TZS):");
+            if (suggested === null || suggested.trim() === "") return;
+            const proposed = Number(suggested);
+            if (isNaN(proposed) || proposed <= 0) {
+                alert("Invalid price proposed.");
+                return;
+            }
+
+            if (cart[barcode]) {
+                cart[barcode].qty += qty;
+                cart[barcode].price = proposed;
+                cart[barcode].proposedPrice = true;
+                cart[barcode].originalPrice = item.price;
+            } else {
+                cart[barcode] = { ...item, qty: qty, price: proposed, proposedPrice: true, originalPrice: item.price };
+            }
+
+            if (typeof triggerCartAnimation === 'function') triggerCartAnimation();
+            renderCart();
+            alert("Added with proposed price: " + proposed.toLocaleString() + " TZS");
         }
 
         // Wrapper for New Arrivals too
@@ -3580,7 +4114,7 @@
                     body.innerHTML += `
         <div class="cart-item">
           <div class="item-info">
-             <strong>${i.name}</strong>
+             <strong>${i.name} ${i.proposedPrice ? '<span style="color:#f59e0b;font-size:0.75rem;background:rgba(245,158,11,0.1);padding:2px 4px;border-radius:4px;margin-left:4px;">Proposed</span>' : ''}</strong>
              <small>${i.pack}</small>
              <div style="font-weight:600; color:var(--primary-dark)">${(i.price * i.qty).toLocaleString()}</div>
           </div>
@@ -3631,11 +4165,16 @@
         function openCheckout() {
             if (!Object.keys(cart).length) return alert("Cart empty");
 
-            // Check for missed items before showing checkout
-            const missed = analyzeMissedItems();
-            if (missed.length > 0) {
-                renderMissedItemsModal(missed);
-                return; // Stop here, user will proceed from modal
+            try {
+                // Check for missed items before showing checkout
+                const missed = analyzeMissedItems();
+                if (missed.length > 0) {
+                    renderMissedItemsModal(missed);
+                    return; // Stop here, user will proceed from modal
+                }
+            } catch (e) {
+                console.error("AI Suggestion Error:", e);
+                // Fallback: Proceed to checkout if AI prediction fails
             }
 
             // No missed items, go straight to checkout
@@ -3648,7 +4187,8 @@
             let total = 0;
             Object.values(cart).forEach(i => {
                 const line = i.qty * i.price; total += line;
-                t.innerHTML += `<tr><td style="padding:10px 0;">${i.name}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">${line.toLocaleString()}</td></tr>`;
+                const nameDisplay = i.proposedPrice ? i.name + ' <span style="color:#f59e0b;font-size:0.75rem;">(Proposed)</span>' : i.name;
+                t.innerHTML += `<tr><td style="padding:8px 0;">${nameDisplay}<br><small style="color:#999;">${i.pack}</small></td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">${line.toLocaleString()}</td></tr>`;
             });
             const isWholesaleUser = localStorage.getItem("isWholesale") === "true";
             const vat = isWholesaleUser ? 0 : total * 0.15;
@@ -3735,19 +4275,23 @@
                 freqMap[npKey].totalQty += Number(entry.qty) || 0;
 
                 const entryDate = new Date(entry.date);
-                if (!freqMap[npKey].lastDate || entryDate > freqMap[npKey].lastDate) {
-                    freqMap[npKey].lastDate = entryDate;
+                if (!isNaN(entryDate.getTime())) {
+                    if (!freqMap[npKey].lastDate || entryDate > freqMap[npKey].lastDate) {
+                        freqMap[npKey].lastDate = entryDate;
+                    }
+                    const dateKey = entryDate.toISOString().split('T')[0];
+                    freqMap[npKey].dates.add(dateKey);
                 }
-                const dateKey = entryDate.toISOString().split('T')[0];
-                freqMap[npKey].dates.add(dateKey);
             });
 
             const allOrderDates = new Set();
             lastPurchases.forEach(entry => {
-                const d = new Date(entry.date).toISOString().split('T')[0];
-                allOrderDates.add(d);
+                const d = new Date(entry.date);
+                if (!isNaN(d.getTime())) {
+                    allOrderDates.add(d.toISOString().split('T')[0]);
+                }
             });
-            const totalOrders = allOrderDates.size;
+            const totalOrders = allOrderDates.size || 1; // Prevent division by zero
 
             const missed = [];
             const seenBarcodes = new Set();
@@ -6347,6 +6891,75 @@
                     document.getElementById('wholesaleIssuesContent').innerHTML = '<div style="text-align:center; padding:2rem;"><div style="font-size:2.5rem; margin-bottom:0.8rem;">❌</div><p style="color:#ef4444; font-weight:600;">Error loading report</p><p style="color:#94a3b8; font-size:0.85rem;">' + e.message + '</p></div>';
                 });
         }
+        let analyticsMarginData = null;
+        function analyticsLoadMarginData() {
+            const token = localStorage.getItem('authToken');
+            if (!token) { alert('Please login first.'); return; }
+            const btn = document.getElementById('analyticsMarginBtn');
+            btn.innerHTML = '<span class="bp-refresh-icon rotating">??</span> Loading...';
+            btn.disabled = true;
+
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getWholesaleList', data: { token } }) }).then(r => r.json()).then(d => { if (d.error) throw new Error(d.error); return d.result; }).then(items => {
+                analyticsMarginData = items;
+                analyticsRenderMargin();
+                btn.innerHTML = 'Analyze Wholesale Prices';
+                btn.disabled = false;
+            }).catch(err => {
+                btn.innerHTML = 'Analyze Wholesale Prices';
+                btn.disabled = false;
+                alert('Error loading price list: ' + err.message);
+            });
+        }
+
+        function analyticsRenderMargin() {
+            if (!analyticsMarginData) return;
+            const targetPct = parseFloat(document.getElementById('analyticsMarginTarget').value) || 0;
+            const tbody = document.getElementById('analyticsMarginBody');
+            const searchTerm = (document.getElementById('analyticsMarginSearch').value || '').toLowerCase();
+
+            // Filter and calculate margin
+            let rows = [];
+            analyticsMarginData.forEach(item => {
+                const p = parseFloat(String(item.price).replace(/[^0-9.-]+/g, "")) || 0;
+                const c = parseFloat(String(item.avgCost).replace(/[^0-9.-]+/g, "")) || 0;
+                if (!c || !p) return;
+                const marginPct = ((p - c) / p) * 100;
+                if (marginPct <= targetPct) {
+                    if (searchTerm && !(item.itemName || '').toLowerCase().includes(searchTerm) && !(item.barcode || '').toLowerCase().includes(searchTerm)) return;
+                    rows.push({
+                        name: item.itemName,
+                        barcode: item.barcode,
+                        cost: item.avgCost,
+                        price: item.price,
+                        margin: marginPct
+                    });
+                }
+            });
+
+            rows.sort((a, b) => a.margin - b.margin);
+
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">? All items are above ' + targetPct + '% margin!</td></tr>';
+                return;
+            }
+
+            let html = '';
+            rows.forEach(r => {
+                const isLoss = r.margin < 0;
+                const mColor = isLoss ? '#dc2626' : '#b45309';
+                const statusHtml = isLoss ? '<span class="bp-status-badge bp-status-low">Loss Making</span>' : '<span class="bp-status-badge" style="background:#fef3c7;color:#b45309;">Below Target</span>';
+                html += '<tr>' +
+                    '<td>' + (r.name || '-') + '</td>' +
+                    '<td style="font-family:monospace; color:#6b7280; font-size:0.8rem;">' + (r.barcode || '-') + '</td>' +
+                    '<td style="text-align:right;">TZS ' + Number(r.cost).toLocaleString() + '</td>' +
+                    '<td style="text-align:right;">TZS ' + Number(r.price).toLocaleString() + '</td>' +
+                    '<td style="text-align:right; font-weight:700; color:' + mColor + ';">' + r.margin.toFixed(2) + '%</td>' +
+                    '<td style="text-align:center;">' + statusHtml + '</td>' +
+                    '</tr>';
+            });
+            tbody.innerHTML = html;
+        }
+
         function analyticsLoadData() {
             const token = localStorage.getItem('authToken');
             if (!token) { alert('Please login first.'); return; }
@@ -6958,9 +7571,10 @@
             filteredOrders.forEach(function (o) {
                 var key = (String(o.name || '') + '|' + String(o.pack || '')).toLowerCase().trim();
                 if (!orderAgg[key]) {
-                    orderAgg[key] = { name: o.name, pack: o.pack || '', cat: o.cat || '', totalQty: 0, customers: {} };
+                    orderAgg[key] = { name: o.name, pack: o.pack || '', cat: o.cat || '', totalQty: 0, revenue: 0, customers: {} };
                 }
                 orderAgg[key].totalQty += Number(o.qty) || 0;
+                orderAgg[key].revenue += (parseFloat(String(o.qty).replace(/[^0-9.-]+/g, "")) || 0) * (parseFloat(String(o.price).replace(/[^0-9.-]+/g, "")) || 0);
                 orderAgg[key].customers[o.customer || o.email || 'Unknown'] = true;
             });
 
@@ -6993,6 +7607,9 @@
                 }
 
                 var systemStock = stockItem ? stockItem.systemStock : 0;
+                var avgCost = stockItem ? (parseFloat(String(stockItem.avgCost).replace(/[^0-9.-]+/g, "")) || 0) : 0;
+                var totalCost = avgCost * agg.totalQty;
+                var marginPct = agg.revenue > 0 ? ((agg.revenue - totalCost) / agg.revenue) * 100 : 0;
                 var itemCode = stockItem ? (stockItem.itemCode || '') : '';
                 var shortfall = Math.max(0, agg.totalQty - systemStock);
                 var status = !stockItem ? 'out' : shortfall > 0 ? 'low' : 'ok';
@@ -7015,13 +7632,33 @@
                     }
                 }
 
+                // FEFO — match expiry batches for this item (by name, barcode, or item_code)
+                // fulfillmentData.expiry is already sorted earliest-first by the backend
+                var fefoSuggestions = [];
+                var barcodeLower = String(agg.barcode || '').toLowerCase().trim();
+                var itemCodeLower = String(itemCode || '').toLowerCase().trim();
+                (fulfillmentData.expiry || []).forEach(function (e) {
+                    var eName = String(e.itemName || '').toLowerCase().trim();
+                    var eCode = String(e.itemCode || '').toLowerCase().trim();
+                    var eBarcode = String(e.barcode || '').toLowerCase().trim();
+                    var matched = (eName && (eName === nameLower || eName.indexOf(nameLower) !== -1 || nameLower.indexOf(eName) !== -1)) ||
+                        (barcodeLower && eBarcode && eBarcode === barcodeLower) ||
+                        (itemCodeLower && eCode && eCode === itemCodeLower);
+                    if (matched && e.stockPcs > 0) {
+                        fefoSuggestions.push(e);
+                    }
+                });
+
                 results.push({
                     name: agg.name, pack: agg.pack, cat: agg.cat,
                     itemCode: itemCode,
                     orderedQty: agg.totalQty, systemStock: systemStock,
                     shortfall: shortfall, status: status,
+                    marginPct: marginPct,
+                    revenue: agg.revenue, totalCost: totalCost,
                     customers: Object.keys(agg.customers).join(', '),
-                    alternatives: alternatives
+                    alternatives: alternatives,
+                    fefoSuggestions: fefoSuggestions
                 });
             }
 
@@ -7056,25 +7693,124 @@
         }
 
         function fulfillmentRenderKPIs(total, inStock, shortItems, rate) {
-            var circ = 2 * Math.PI * 24;
+            var circ = 2 * Math.PI * 28;
             var offset = circ - (rate / 100) * circ;
             var rc = rate >= 80 ? '#10b981' : rate >= 50 ? '#f59e0b' : '#ef4444';
+            var rcGlow = rate >= 80 ? 'rgba(16,185,129,.25)' : rate >= 50 ? 'rgba(245,158,11,.25)' : 'rgba(239,68,68,.25)';
+
+            // Decorative mini sparkline SVG
+            var spark = '<svg style="position:absolute;bottom:0;left:0;width:100%;height:40px;opacity:.06" viewBox="0 0 200 40" preserveAspectRatio="none"><path d="M0,35 C30,28 50,10 80,20 S130,35 160,15 S190,30 200,25 L200,40 L0,40Z" fill="currentColor"/></svg>';
+
             document.getElementById('fulfillmentKpiStrip').innerHTML =
-                '<div class="ff-kpi-card"><div class="ff-kpi-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb);box-shadow:0 4px 12px rgba(59,130,246,.3);color:white">📦</div><div class="ff-kpi-label">Total Items Ordered</div><div class="ff-kpi-value">' + total + '</div><div class="ff-kpi-sub">unique items in this period</div></div>' +
-                '<div class="ff-kpi-card"><div class="ff-kpi-icon" style="background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 4px 12px rgba(16,185,129,.3);color:white">✅</div><div class="ff-kpi-label">Items In Stock</div><div class="ff-kpi-value" style="color:#15803d">' + inStock + '</div><div class="ff-kpi-sub">can be fully fulfilled</div></div>' +
-                '<div class="ff-kpi-card"><div class="ff-kpi-icon" style="background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 4px 12px rgba(239,68,68,.3);color:white">⚠️</div><div class="ff-kpi-label">Items Short</div><div class="ff-kpi-value" style="color:#dc2626">' + shortItems + '</div><div class="ff-kpi-sub">insufficient stock</div></div>' +
-                '<div class="ff-kpi-card"><div class="ff-kpi-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);box-shadow:0 4px 12px rgba(139,92,246,.3);color:white">📊</div><div class="ff-kpi-label">Fulfillment Rate</div><div class="ff-gauge-wrap"><div class="ff-gauge-ring"><svg width="60" height="60" viewBox="0 0 60 60"><circle class="ff-gauge-bg" cx="30" cy="30" r="24"/><circle class="ff-gauge-fill" cx="30" cy="30" r="24" style="stroke:' + rc + ';stroke-dasharray:' + circ + ';stroke-dashoffset:' + offset + '"/></svg><div class="ff-gauge-text">' + rate + '%</div></div><div class="ff-kpi-sub">order coverage</div></div></div>';
+                // Card 1: Total Items
+                '<div class="ff-kpi-card" style="--card-accent:#3b82f6">' +
+                '<div class="ff-kpi-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 4px 16px rgba(59,130,246,.35);color:white">📦</div>' +
+                '<div class="ff-kpi-label">Total Items Ordered</div>' +
+                '<div class="ff-kpi-value">' + total + '</div>' +
+                '<div class="ff-kpi-sub">unique items in this period</div>' +
+                spark.replace('currentColor', '#3b82f6') +
+                '</div>' +
+                // Card 2: In Stock
+                '<div class="ff-kpi-card" style="--card-accent:#10b981">' +
+                '<div class="ff-kpi-icon" style="background:linear-gradient(135deg,#10b981,#047857);box-shadow:0 4px 16px rgba(16,185,129,.35);color:white">✅</div>' +
+                '<div class="ff-kpi-label">Items In Stock</div>' +
+                '<div class="ff-kpi-value" style="color:#059669">' + inStock + '</div>' +
+                '<div class="ff-kpi-sub">can be fully fulfilled</div>' +
+                '<div style="margin-top:8px;height:4px;border-radius:4px;background:#e2e8f0;overflow:hidden"><div style="height:100%;width:' + (total > 0 ? Math.round((inStock / total) * 100) : 0) + '%;background:linear-gradient(90deg,#10b981,#059669);border-radius:4px;transition:width 1s ease"></div></div>' +
+                spark.replace('currentColor', '#10b981') +
+                '</div>' +
+                // Card 3: Items Short
+                '<div class="ff-kpi-card" style="--card-accent:#ef4444">' +
+                '<div class="ff-kpi-icon" style="background:linear-gradient(135deg,#ef4444,#b91c1c);box-shadow:0 4px 16px rgba(239,68,68,.35);color:white">⚠️</div>' +
+                '<div class="ff-kpi-label">Items Short</div>' +
+                '<div class="ff-kpi-value" style="color:#dc2626">' + shortItems + '</div>' +
+                '<div class="ff-kpi-sub">insufficient stock</div>' +
+                '<div style="margin-top:8px;height:4px;border-radius:4px;background:#e2e8f0;overflow:hidden"><div style="height:100%;width:' + (total > 0 ? Math.round((shortItems / total) * 100) : 0) + '%;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:4px;transition:width 1s ease"></div></div>' +
+                spark.replace('currentColor', '#ef4444') +
+                '</div>' +
+                // Card 4: Fulfillment Rate (Gauge)
+                '<div class="ff-kpi-card" style="--card-accent:#8b5cf6">' +
+                '<div class="ff-kpi-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);box-shadow:0 4px 16px rgba(139,92,246,.35);color:white">📊</div>' +
+                '<div class="ff-kpi-label">Fulfillment Rate</div>' +
+                '<div class="ff-gauge-wrap">' +
+                '<div class="ff-gauge-ring">' +
+                '<svg width="68" height="68" viewBox="0 0 68 68">' +
+                '<circle class="ff-gauge-bg" cx="34" cy="34" r="28"/>' +
+                '<circle class="ff-gauge-fill" cx="34" cy="34" r="28" style="stroke:' + rc + ';stroke-dasharray:' + circ + ';stroke-dashoffset:' + offset + ';filter:drop-shadow(0 0 4px ' + rcGlow + ')"/>' +
+                '</svg>' +
+                '<div class="ff-gauge-text">' + rate + '%</div>' +
+                '</div>' +
+                '<div class="ff-kpi-sub">order coverage</div>' +
+                '</div>' +
+                spark.replace('currentColor', '#8b5cf6') +
+                '</div>';
         }
 
         function fulfillmentRenderSummary(results, totalShortQty) {
+            var marginLow = results.filter(function (r) { return r.marginPct < 15; }).length;
+            var marginMid = results.filter(function (r) { return r.marginPct >= 15 && r.marginPct < 30; }).length;
+            var marginHigh = results.filter(function (r) { return r.marginPct >= 30; }).length;
+            var marginTotal = results.length || 1;
+
+            document.getElementById('fulfillmentMarginCards').innerHTML =
+                // Low margin card
+                '<div class="ff-summary-card" style="--ff-accent:#ef4444">' +
+                '<div class="ff-summary-icon" style="background:linear-gradient(135deg,#fee2e2,#fecaca);color:#dc2626">' +
+                '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L2 18h16L10 2z" stroke="currentColor" stroke-width="1.5" fill="rgba(220,38,38,.1)"/><path d="M10 8v4M10 14h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+                '</div>' +
+                '<div style="flex:1">' +
+                '<div class="ff-summary-val">' + marginLow + '</div>' +
+                '<div class="ff-summary-lbl">&lt; 15% Margin</div>' +
+                '<div style="margin-top:6px;height:3px;border-radius:3px;background:#fecaca;overflow:hidden"><div style="height:100%;width:' + Math.round((marginLow / marginTotal) * 100) + '%;background:linear-gradient(90deg,#ef4444,#dc2626);border-radius:3px;transition:width .8s ease"></div></div>' +
+                '</div>' +
+                '</div>' +
+                // Mid margin card
+                '<div class="ff-summary-card" style="--ff-accent:#f59e0b">' +
+                '<div class="ff-summary-icon" style="background:linear-gradient(135deg,#fef3c7,#fde68a);color:#b45309">' +
+                '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" fill="rgba(180,83,9,.08)"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+                '</div>' +
+                '<div style="flex:1">' +
+                '<div class="ff-summary-val">' + marginMid + '</div>' +
+                '<div class="ff-summary-lbl">15% – 30% Margin</div>' +
+                '<div style="margin-top:6px;height:3px;border-radius:3px;background:#fde68a;overflow:hidden"><div style="height:100%;width:' + Math.round((marginMid / marginTotal) * 100) + '%;background:linear-gradient(90deg,#f59e0b,#d97706);border-radius:3px;transition:width .8s ease"></div></div>' +
+                '</div>' +
+                '</div>' +
+                // High margin card
+                '<div class="ff-summary-card" style="--ff-accent:#10b981">' +
+                '<div class="ff-summary-icon" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#15803d">' +
+                '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.2" fill="rgba(21,128,61,.06)"/></svg>' +
+                '</div>' +
+                '<div style="flex:1">' +
+                '<div class="ff-summary-val">' + marginHigh + '</div>' +
+                '<div class="ff-summary-lbl">&gt; 30% Margin</div>' +
+                '<div style="margin-top:6px;height:3px;border-radius:3px;background:#bbf7d0;overflow:hidden"><div style="height:100%;width:' + Math.round((marginHigh / marginTotal) * 100) + '%;background:linear-gradient(90deg,#10b981,#059669);border-radius:3px;transition:width .8s ease"></div></div>' +
+                '</div>' +
+                '</div>';
+
             var outCount = results.filter(function (r) { return r.status === 'out'; }).length;
             var lowCount = results.filter(function (r) { return r.status === 'low'; }).length;
             var okCount = results.filter(function (r) { return r.status === 'ok'; }).length;
             document.getElementById('fulfillmentSummary').innerHTML =
-                '<div class="ff-summary-card"><div class="ff-summary-icon" style="background:#dcfce7;color:#15803d">✅</div><div><div class="ff-summary-val">' + okCount + '</div><div class="ff-summary-lbl">Fully Available</div></div></div>' +
-                '<div class="ff-summary-card"><div class="ff-summary-icon" style="background:#fef3c7;color:#b45309">⚠️</div><div><div class="ff-summary-val">' + lowCount + '</div><div class="ff-summary-lbl">Partial Stock</div></div></div>' +
-                '<div class="ff-summary-card"><div class="ff-summary-icon" style="background:#fee2e2;color:#dc2626">❌</div><div><div class="ff-summary-val">' + outCount + '</div><div class="ff-summary-lbl">Not Found in Stock</div></div></div>' +
-                '<div class="ff-summary-card"><div class="ff-summary-icon" style="background:#ede9fe;color:#7c3aed">📉</div><div><div class="ff-summary-val">' + Number(totalShortQty).toFixed(2) + '</div><div class="ff-summary-lbl">Total Shortfall Qty</div></div></div>';
+                // Fully Available
+                '<div class="ff-summary-card" style="--ff-accent:#10b981">' +
+                '<div class="ff-summary-icon" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#15803d">✅</div>' +
+                '<div><div class="ff-summary-val" style="color:#059669">' + okCount + '</div><div class="ff-summary-lbl">Fully Available</div></div>' +
+                '</div>' +
+                // Partial Stock
+                '<div class="ff-summary-card" style="--ff-accent:#f59e0b">' +
+                '<div class="ff-summary-icon" style="background:linear-gradient(135deg,#fef3c7,#fde68a);color:#b45309">⚠️</div>' +
+                '<div><div class="ff-summary-val" style="color:#d97706">' + lowCount + '</div><div class="ff-summary-lbl">Partial Stock</div></div>' +
+                '</div>' +
+                // Not Found
+                '<div class="ff-summary-card" style="--ff-accent:#ef4444">' +
+                '<div class="ff-summary-icon" style="background:linear-gradient(135deg,#fee2e2,#fecaca);color:#dc2626">❌</div>' +
+                '<div><div class="ff-summary-val" style="color:#dc2626">' + outCount + '</div><div class="ff-summary-lbl">Not Found in Stock</div></div>' +
+                '</div>' +
+                // Total Shortfall
+                '<div class="ff-summary-card" style="--ff-accent:#8b5cf6">' +
+                '<div class="ff-summary-icon" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#7c3aed">📉</div>' +
+                '<div><div class="ff-summary-val" style="color:#7c3aed">' + Number(totalShortQty).toFixed(2) + '</div><div class="ff-summary-lbl">Total Shortfall Qty</div></div>' +
+                '</div>';
         }
 
         function fulfillmentRenderTable(results) {
@@ -7085,6 +7821,7 @@
                 if (ffSortField === 'name') { va = a.name.toLowerCase(); vb = b.name.toLowerCase(); return ffSortAsc ? va.localeCompare(vb) : vb.localeCompare(va); }
                 if (ffSortField === 'ordered') { va = a.orderedQty; vb = b.orderedQty; }
                 else if (ffSortField === 'stock') { va = a.systemStock; vb = b.systemStock; }
+                else if (ffSortField === 'margin') { va = a.marginPct; vb = b.marginPct; }
                 else { va = a.shortfall; vb = b.shortfall; }
                 return ffSortAsc ? va - vb : vb - va;
             });
@@ -7093,8 +7830,10 @@
             var html = '';
             sorted.forEach(function (r, i) {
                 var rowClass = 'ff-row-' + r.status;
-                var statusHtml = r.status === 'ok' ? '<span class="ff-status ff-status-ok">✅ In Stock</span>'
-                    : r.status === 'low' ? '<span class="ff-status ff-status-low">⚠️ Low Stock</span>'
+                var statusHtml = r.status === 'ok'
+                    ? '<span class="ff-status ff-status-ok">✅ In Stock</span>'
+                    : r.status === 'low'
+                        ? '<span class="ff-status ff-status-low">⚠️ Low Stock</span>'
                         : '<span class="ff-status ff-status-out">❌ Not Found</span>';
 
                 var shortHtml = '';
@@ -7109,7 +7848,7 @@
                 }
 
                 var altHtml = '';
-                if (r.alternatives.length > 0) {
+                if (r.alternatives && r.alternatives.length > 0) {
                     altHtml = '<div class="ff-alt-list">';
                     r.alternatives.forEach(function (alt) {
                         altHtml += '<div class="ff-alt-item"><span class="ff-alt-dot"></span><span class="ff-alt-name" title="' + alt.name + '">' + alt.name + '</span><span class="ff-alt-stock">(' + Number(alt.stock).toFixed(2) + ')</span></div>';
@@ -7119,6 +7858,27 @@
                     altHtml = '<span style="color:#d1d5db;font-size:.7rem">No alternatives found</span>';
                 } else {
                     altHtml = '<span style="color:#d1d5db;font-size:.7rem">—</span>';
+                }
+
+                // FEFO — Expiry suggestion cell (earliest expiry first, color-coded by urgency)
+                var fefoHtml = '';
+                if (r.fefoSuggestions && r.fefoSuggestions.length > 0) {
+                    fefoHtml = '<div class="ff-alt-list">';
+                    r.fefoSuggestions.forEach(function (e) {
+                        var urgColor = e.daysRemain <= 30 ? '#dc2626' : e.daysRemain <= 90 ? '#b45309' : '#15803d';
+                        var urgBg = e.daysRemain <= 30 ? 'rgba(220,38,38,.08)' : e.daysRemain <= 90 ? 'rgba(180,83,9,.08)' : 'rgba(21,128,61,.06)';
+                        var urgIcon = e.daysRemain <= 30 ? '🔴' : e.daysRemain <= 90 ? '🟡' : '🟢';
+                        fefoHtml +=
+                            '<div style="border-left:3px solid ' + urgColor + ';background:' + urgBg + ';border-radius:6px;padding:4px 7px;margin-bottom:4px;font-size:.72rem;">' +
+                            '<div style="font-weight:700;color:' + urgColor + ';margin-bottom:2px">' + urgIcon + ' ' + e.expDate + ' <span style="font-weight:500;color:#6b7280">(' + e.daysRemain + 'd)</span></div>' +
+                            '<div style="color:#374151">📍 <strong>' + e.locId + '</strong>  |  ' +
+                            'CTN: <strong>' + e.stockCtn + '</strong>' +
+                            '</div>' +
+                            '</div>';
+                    });
+                    fefoHtml += '</div>';
+                } else {
+                    fefoHtml = '<span style="color:#d1d5db;font-size:.7rem">No expiry data</span>';
                 }
 
                 var custDisplay = r.customers.length > 40 ? r.customers.substring(0, 38) + '...' : r.customers;
@@ -7132,24 +7892,45 @@
                     '<td style="text-align:right;font-weight:600">' + Number(r.orderedQty).toFixed(2) + '</td>' +
                     '<td style="text-align:right;font-weight:600;color:' + (r.systemStock > 0 ? '#374151' : '#dc2626') + '">' + Number(r.systemStock).toFixed(2) + '</td>' +
                     '<td style="text-align:right">' + shortHtml + '</td>' +
+                    '<td style="text-align:right;font-weight:700;color:' + (r.marginPct < 15 ? '#dc2626' : r.marginPct < 30 ? '#b45309' : '#15803d') + '">' + Number(r.marginPct).toFixed(2) + '%</td>' +
                     '<td style="text-align:center">' + statusHtml + '</td>' +
                     '<td>' + altHtml + '</td>' +
+                    '<td class="ff-expiry-col" style="min-width:200px">' + fefoHtml + '</td>' +
                     '</tr>';
             });
             document.getElementById('fulfillmentTableBody').innerHTML = html;
         }
 
+        var ffExpiryVisible = false;
+        function fulfillmentToggleExpiry() {
+            ffExpiryVisible = !ffExpiryVisible;
+            var table = document.getElementById('fulfillmentTable');
+            var btn = document.getElementById('ffExpiryToggleBtn');
+            if (ffExpiryVisible) {
+                table.classList.add('ff-show-expiry');
+                btn.innerHTML = '🗓 Hide Expiry';
+                btn.style.background = 'linear-gradient(135deg,#64748b,#475569)';
+            } else {
+                table.classList.remove('ff-show-expiry');
+                btn.innerHTML = '🗓 Show Expiry';
+                btn.style.background = 'linear-gradient(135deg,#f59e0b,#d97706)';
+            }
+        }
+
         function fulfillmentExport() {
             if (!ffLastResults || ffLastResults.length === 0) { alert('No data to export'); return; }
-            var data = [['#', 'Item Code', 'Item Name', 'Pack', 'Customer(s)', 'Ordered Qty', 'System Stock', 'Shortfall', 'Status', 'Alternatives']];
+            var data = [['#', 'Item Code', 'Item Name', 'Pack', 'Customer(s)', 'Ordered Qty', 'System Stock', 'Shortfall', 'Margin %', 'Status', 'Alternatives', 'FEFO: Expiry Suggestions (Loc | CTN | PCS | Exp Date | Days)']];
             ffLastResults.forEach(function (r, i) {
                 var statusText = r.status === 'ok' ? 'In Stock' : r.status === 'low' ? 'Low Stock' : 'Not Found';
                 var altText = r.alternatives.map(function (a) { return a.name + ' (' + a.stock + ')'; }).join('; ');
-                data.push([i + 1, r.itemCode || '', r.name, r.pack, r.customers, r.orderedQty, r.systemStock, r.shortfall, statusText, altText]);
+                var fefoText = (r.fefoSuggestions || []).map(function (e) {
+                    return e.locId + ' | CTN:' + e.stockCtn + ' | Exp:' + e.expDate + ' | ' + e.daysRemain + 'd';
+                }).join(' || ');
+                data.push([i + 1, r.itemCode || '', r.name, r.pack, r.customers, r.orderedQty, r.systemStock, r.shortfall, Number(r.marginPct).toFixed(2) + '%', statusText, altText, fefoText]);
             });
             var ws = XLSX.utils.aoa_to_sheet(data);
             // Column widths
-            ws['!cols'] = [{ wch: 5 }, { wch: 15 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, { wch: 10 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 40 }];
+            ws['!cols'] = [{ wch: 5 }, { wch: 15 }, { wch: 30 }, { wch: 12 }, { wch: 25 }, { wch: 10 }, { wch: 12 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 40 }, { wch: 60 }];
             var wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Stock Fulfillment');
             var dateStr = document.getElementById('fulfillmentDateFrom').value || 'report';
@@ -7903,7 +8684,8 @@
                 const safeBarcode = item.barcode || '';
 
                 // Mirroring the standard product card layout from the order page
-                const addBtnHtml = `<button class="add-btn add-btn-mini" onclick="addToCartFromGrid('${safeBarcode}', 'ws_qty_${safeBarcode}', this)">＋</button>`;
+                const addBtnHtml = `<button class="add-btn add-btn-mini" onclick="addToCartFromGrid('${safeBarcode}', 'ws_qty_${safeBarcode}', this)" title="Add at listed price">＋</button>
+                                    <button class="add-btn add-btn-mini" style="background:#f59e0b; color:white; border:none; margin-left:5px; font-size: 0.9rem;" onclick="proposePriceFromGrid('${safeBarcode}', 'ws_qty_${safeBarcode}')" title="Propose custom price">🤝</button>`;
 
                 html += `
                 <div class="product-card" style="animation-delay:${delay}s;">
