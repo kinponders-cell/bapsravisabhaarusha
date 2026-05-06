@@ -626,7 +626,28 @@
     }
 
     .gc-products-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .gc-product-card {
+        padding: 0.6rem;
+    }
+
+    .gc-product-name {
+        font-size: 0.8rem;
+    }
+
+    .gc-product-qty-row {
+        padding: 0.3rem 0.4rem;
+    }
+
+    .gc-product-qty-label {
+        font-size: 0.65rem;
+    }
+
+    .gc-product-qty-value {
+        font-size: 0.85rem;
     }
 
     .gc-action-bar {
